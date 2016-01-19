@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+void main(int argc, char* argv[]){
+  int i;
+  float dev;
+  char e[] = "E";
+  float power;
+  if(argc < 3 || argc > 4)
+    printf("Wrong number of arguments. The program now will be terminated\n");
+  else
+    if(argc == 3)
+      dev = 0;
+    else
+      {
+      dev = atof(argv[3]);
+      power = atof(argv[2]);
+      }
+  if(strcmp(argv[1], e) != 0 || dev - (int)dev == 0 || power != (int)power)
+    printf("One of the arguments is wrong\n");
+  else
+    
+}

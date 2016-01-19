@@ -1,0 +1,3 @@
+all: input.c, resentence.c
+gcc -o input input.c
+gcc -o rev resentence.c
