@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 void ex(float a, float deviation);
 
@@ -19,7 +20,7 @@ void main(int argc, char* argv[]){
       else
         dev = atof(argv[3]);
     }
-  if(strcmp(argv[1], e) != 0|| power < 0)
+  if(strcmp(argv[1], e) != 0)
     printf("One of the arguments is wrong\n");
   else
     ex(power,dev);
@@ -39,8 +40,11 @@ void ex(float a, float deviation){
   //printf("n = %d\n",n);
   for(i = 1; i <= n; ++i)
     {
-    y *= a/i;
-    x += y;
+      y *= fabs(a)/i;
+      x += y;
   }
-  printf("E^%4.2f = %4.2f\n",a,x);
+  if(a >= 0)
+    printf("E^%4.2f = %4.2f\n",a,x);
+  else
+    printf("E^%4.2f = %4.2f\n",a,1.0 / x);
 }
