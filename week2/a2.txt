@@ -1,0 +1,45 @@
+The character " 
+":   17 times
+The character "  ":    2 times
+The character " D":    1 times
+The character " O":    1 times
+The character " a":   14 times
+The character " d":   14 times
+The character " e":    1 times
+The character " g":    1 times
+The character " i":    1 times
+The character " n":    1 times
+The character " t":    2 times
+The character " u":    1 times
+The character " v":    1 times
+The character " w":   11 times
+The character " 
+":   17 times
+The character "  ":    2 times
+The character " D":    1 times
+The character " O":    1 times
+The character " a":   14 times
+The character " d":   14 times
+The character " e":    1 times
+The character " g":    1 times
+The character " i":    1 times
+The character " n":    1 times
+The character " t":    2 times
+The character " u":    1 times
+The character " v":    1 times
+The character " w":   11 times
+The character " 
+":   17 times
+The character "  ":    2 times
+The character " D":    1 times
+The character " O":    1 times
+The character " a":   14 times
+The character " d":   14 times
+The character " e":    1 times
+The character " g":    1 times
+The character " i":    1 times
+The character " n":    1 times
+The character " t":    2 times
+The character " u":    1 times
+The character " v":    1 times
+The character " w":   11 times
