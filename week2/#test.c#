@@ -1,9 +1,0 @@
-#include <stdio.h>
-void encrypt(char* a, int distance);
-
-void main(){
-  char* c = "a";
-  int dis = 3;
-  encrypt(c, dis);
-  printf("%s\n",c);
-}
