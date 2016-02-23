@@ -69,6 +69,7 @@ void main()
             if(p[i].giao[j] != 0)
               printf("The %d-th circle intersect with %d-th circle\n",i + 1, p[i].giao[j]);
 		}
+    free(p);
 }
 
 

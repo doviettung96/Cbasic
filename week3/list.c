@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct{
+  int id;
+  char name[20];
+} hs;
+  
+void main(int argc, char** argv){
+  FILE* ptr;
+  int n, len;
+
+  if((ptr = fopen(argv[1], "wb")) == NULL)
+    printf("Can not open the file %s to write\n", argv[1]);
+  else
+    {
+      printf("Number of student: "); scanf("%d", &n);
+      hs *st;
+      st = (hs*)malloc(n * sizeof(hs));
+      while(getchar() != '\n');
+      for(int i = 0; i < n; ++i)
+        {
+          printf("Student number %d\n", i + 1);
+          printf("Name: "); gets((*(st + i)).name);
+          printf("ID: "); scanf("%d", &(*(st + i)).id);
+          while(getchar() != '\n');
+        }
+      
+      for(int i = 0; i < n; ++i)
+        {
+          printf("Student number %d\n", i + 1);
+          printf("Name: %s\n",(*(st + i)).name);
+          printf("ID: %d\n",(*(st + i)).id);
+        }
+      
+      fwrite(st, sizeof(hs), n, ptr);
+      fclose(ptr);
+      free(st);
+      
+    }
+  
+}

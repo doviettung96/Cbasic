@@ -1,12 +1,10 @@
 #include <stdio.h>
-#include <stdlib.h>
+
+#define max 100
 
 void main(int argc, char** argv)
 {
-  int max;
-  max = atoi(argv[2]);
-    
-  FILE* fptr1;
+  *FILE fptr1;
   char buff[max + 1];
   int num;
     
@@ -18,5 +16,4 @@ void main(int argc, char** argv)
       buff[num * sizeof(char)] = '\0';
       printf("%s\n", buff);
     }
-  fclose(fptr1);
 }
