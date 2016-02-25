@@ -61,13 +61,15 @@ void main()
         max = p[i].count;
     
 	for(i = 0; i < n; ++i)
-      if(p[i].count == max)
-		{
-          printf("\nThe %d-th circle intersect with most of other circles\n", i + 1);
-          
-          for(j = 0; j < n; ++j)
-            if(p[i].giao[j] != 0)
-              printf("The %d-th circle intersect with %d-th circle\n",i + 1, p[i].giao[j]);
+		if(max == 0)
+			printf("There is no intersection between those circles\n");
+		else
+      		if(p[i].count == max)
+				{
+          			printf("\nThe %d-th circle intersect with most of other circles\n", i + 1);
+          			for(j = 0; j < n; ++j)
+            			if(p[i].giao[j] != 0)
+              				printf("The %d-th circle intersect with %d-th circle\n",i + 1, p[i].giao[j]);
 		}
     free(p);
 }

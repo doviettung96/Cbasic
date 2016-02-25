@@ -11,7 +11,7 @@ void main(int argc, char** argv)
   int num;
     
   if((fptr1 = fopen(argv[1], "rb")) == NULL)
-    printf("Can nor open the file %s\n", argv[1]);
+    printf("Can not open the file %s\n", argv[1]);
   else
     {
       num = fread(buff, sizeof(char), max, fptr1);
