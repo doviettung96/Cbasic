@@ -16,28 +16,29 @@ typedef struct{
 } cir;
 
 int check(cir tron1, cir tron2);
-float rd();
 
 void main()
 {
   int  i, j, max = 0;
 	cir *p;
 	int n;
+    srand(time(NULL));
     printf("How many circles do you want? ");
-    scanf("%d",&n);
+    n = rand()%10;
+    //scanf("%d",&n);
     p = (cir*)malloc(n* sizeof(cir));
     
 	for(i = 0; i < n; ++i){
       
       printf("The %d-th circle\n", i + 1);
-		printf("I%d(x;y) = ", i + 1); 
-		//p[i].tam.x = rd();
-		//p[i].tam.y = rd();
-		scanf("%f;%f",&p[i].tam.x, &p[i].tam.y);
-		printf("R%d = ",i + 1); 
-		//p[i].r = rd();
-		scanf("%f",&p[i].r);
-		p[i].count = 0;
+      printf("I%d(x;y) = ", i + 1); 
+      p[i].tam.x = rand()%100/10.0;
+      p[i].tam.y = rand()%100/10.0;
+      //scanf("%f;%f",&p[i].tam.x, &p[i].tam.y);
+      printf("R%d = ",i + 1); 
+      p[i].r = rand()%100/10.0;
+      //scanf("%f",&p[i].r);
+      p[i].count = 0;
 	}
     
 	for(i = 0; i < n; ++i)
@@ -87,10 +88,5 @@ int check(cir tron1, cir tron2){
     return 0;
 }
 
-float rd(){
-  int x;
-  srand(time(NULL));
-  x = rand()%100;
-  return x / 10.0;
-}
+
 
