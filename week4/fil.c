@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#define max 5
+#define max 10
 void main(int argc, char** argv){
-  char list[max][10] = {"fuck", "bitch", "sex", "porn", "naked"};
+  char list[max][10] = {"fuck", "bitch", "sex", "porn", "naked","cock", "suck","scum","shit","damn"};
   FILE* f;
   int count = 0;
   char *p = NULL;
@@ -41,7 +41,7 @@ void main(int argc, char** argv){
           {
           for(int j = 0; j < max; ++j)
             {
-              p = strstr(list[j], content[i]);
+              p = strstr(content[i], list[j]);
               if(p != NULL)
                 break;
               
