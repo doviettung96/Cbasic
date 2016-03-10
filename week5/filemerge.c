@@ -6,15 +6,15 @@
 
 typedef struct {
 	char name[30];
-	char tel[11];
-	char email[25];
+	char tel[15];
+	char email[30];
 } phone_addr;
 
 void main(int argc, char **argv) {
 	FILE *fptr;
 	FILE *f1, *f2;
 	phone_addr *contact;
-
+	int numMerge;
 	if (argc != 4)
 	{
 		printf("Wrong syntax!\n");
@@ -38,11 +38,11 @@ void main(int argc, char **argv) {
 		exit(1);
 	}
 
-	contact = (phone_addr*)malloc(20 * sizeof(phone_addr));
-	fread(contact, sizeof(phone_addr), 10, f1);
-	fwrite(contact, sizeof(phone_addr), 10, fptr);
-	fread(contact, sizeof(phone_addr), 10, f2);
-	fwrite(contact, sizeof(phone_addr), 10, fptr);
+	contact = (phone_addr*)malloc(MAX * sizeof(phone_addr));
+	numMerge = fread(contact, sizeof(phone_addr), MAX, f1);
+	fwrite(contact, sizeof(phone_addr), numMerge, fptr);
+	fread(contact, sizeof(phone_addr), MAX - numMerge, f2);
+	fwrite(contact, sizeof(phone_addr), MAX - numMerge, fptr);
 	free(contact);
 
 
