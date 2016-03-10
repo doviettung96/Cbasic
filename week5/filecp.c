@@ -11,6 +11,8 @@ void main(int argc, char** argv) {
 	int count = 0;
 	char a[50], b[50];
 	int first = n;
+	int result1 = -1;
+	int result2 = -1;
 
 	if ((f = fopen(argv[1], "r")) == NULL)
 	{
@@ -26,16 +28,21 @@ void main(int argc, char** argv) {
 	for (int i = 0; i < n; ++i)
 		dif[i] = 0;
 
-	while (!feof(f) && !feof(p)) {
-		fscanf(f, "%[^\n]\n", a);
-		fscanf(p, "%[^\n]\n", b);
+	printf("The line where %s and %s differ:\n", argv[1], argv[2]);
+	while (!feof(f) || !feof(p)) {
+		result1 = fscanf(f, "%[^\n]\n", a);
+		// printf("%d\n", result1);
+		result2 = fscanf(p, "%[^\n]\n", b);
+		// printf("%d\n", result2);
 		//printf("%s\n%s\n",a, b);
-		if (strcmp(a, b) != 0)
+
+		if (strcmp(a, b) != 0 || result1 != result2)
 		{
 			dif[count] = 1;
-			printf("The line where %s and %s differ:\n %s\n%s\n", argv[1], argv[2], a, b);
-
+			printf("From 1st file: %s\nFrom 2nd file: %s\n", result1 == 1?a : "\0", result2 == 1?b: "\0");
 		}
+		result1 = -1;
+		result2 = -1;
 		count++;
 	}
 
