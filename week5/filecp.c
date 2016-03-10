@@ -2,15 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX 100
 //this program is to compare the corresponding lines of 2 text file
 void main(int argc, char** argv) {
 	FILE* f;
 	FILE* p;
-	int n = atoi(argv[3]);
-	int dif[n];
+	// int n = atoi(argv[3]);
+	int dif[MAX];
 	int count = 0;
 	char a[50], b[50];
-	int first = n;
+	int first = MAX;
 	int result1 = -1;
 	int result2 = -1;
 
@@ -25,13 +26,12 @@ void main(int argc, char** argv) {
 		exit(1);
 	}
 
-	for (int i = 0; i < n; ++i)
+	for (int i = 0; i < MAX; ++i)
 		dif[i] = 0;
 
 	printf("The line where %s and %s differ:\n", argv[1], argv[2]);
 	while (!feof(f) || !feof(p)) {
 		result1 = fscanf(f, "%[^\n]\n", a);
-		// printf("%d\n", result1);
 		result2 = fscanf(p, "%[^\n]\n", b);
 		// printf("%d\n", result2);
 		//printf("%s\n%s\n",a, b);
@@ -39,7 +39,7 @@ void main(int argc, char** argv) {
 		if (strcmp(a, b) != 0 || result1 != result2)
 		{
 			dif[count] = 1;
-			printf("From 1st file: %s\nFrom 2nd file: %s\n", result1 == 1?a : "\0", result2 == 1?b: "\0");
+			printf("From 1st file: %s\nFrom 2nd file: %s\n", result1 == 1 ? a : "\0", result2 == 1 ? b : "\0");
 		}
 		result1 = -1;
 		result2 = -1;
@@ -52,8 +52,10 @@ void main(int argc, char** argv) {
 			if (i < first)
 				first = i;
 		}
-	printf("The first line where %s and %s differ: %d\n", argv[1], argv[2], first + 1);
-
+	if (first != MAX)
+		printf("The first line where %s and %s differ: %d\n", argv[1], argv[2], first + 1);
+	else
+		printf("There is no different line between %s and %s\n", argv[1], argv[2]);
 	fclose(f);
 	fclose(p);
 }
