@@ -4,7 +4,10 @@
 // #define NUMDATA 138
 int result;
 
+
 int main(int argc, char **argv) {
+	slist *list;
+	slist *list2;
 	int choice;
 	int i = 0;
 	int numData;
@@ -19,6 +22,7 @@ int main(int argc, char **argv) {
 	                           "Delete first", "Search and Update", "Divide and Extract",
 	                           "Reverse list", "Save to file", "Exit (free)"
 	                          };
+
 
 	do {
 		choice = getMenu(sections, MAX);
@@ -40,8 +44,11 @@ int main(int argc, char **argv) {
 
 			// fclose(fin);
 			// fclose(fout);
+			list = (slist *)malloc(sizeof(slist));
+			list2 = (slist *)malloc(sizeof(slist));
 
-
+			iniList(list);
+			iniList(list2);
 			if ((fin = fopen(argv[1], "rb")) == NULL)
 			{
 				printf("Can't open file %s\n", argv[1]);
@@ -52,44 +59,46 @@ int main(int argc, char **argv) {
 			rewind(fin);
 			result = importfromDB(fin, numData);
 			for (i = 0; i < result; ++i)
-				insertEnd(parr[i], root, last);
+				insertEnd(parr[i], list);
 			// printData();
 			fclose(fin);
 			break;
 		case 2:
-			display(root);
+			display(list);
 			break;
 		case 3:
 			printf("Enter 0 to insert before, 1 to insert after: ");
 			scanf("%d", &select);
 			while (getchar() != '\n');
 			if (select == 0)
-				insertBefore(root, typeHand(), root);
+				insertBefore(list->root, typeHand(), list);
 			else
-				insertEnd(typeHand(), root, last);
+				insertEnd(typeHand(), list);
 			break;
 		case 4: printf("Position to insert after: ");
 			scanf("%d", &select);
 			printf("Type in the data to insert\n");
+			while (getchar() != '\n');
 			if (select < numData)
-				insertAfter(findNode(parr[select - 1], root), typeHand(), root, last);
+				insertAfter(findNode(parr[select - 1], list), typeHand(), list);
 			else
-				insertEnd(typeHand(), root, last);
+				insertEnd(typeHand(), list);
 			break;
 		case 5: printf("Position to delete: ");
 			scanf("%d", &select);
-			delNode(findNode(parr[select - 1], root), root, last);
+			delNode(findNode(parr[select - 1], list), list);
 			break;
-		case 6: delNode(last, root, last);
+		case 6: delNode(list->cur, list);
 			break;
-		case 7: delNode(root, root, last);
+		case 7: delNode(list->last, list);
 			break;
 		case 8: searchModel();
 			do {
 				printf("Update for position number (type -1 to stop updating): ");
 				scanf("%d", &select);
-				insertAfter(findNode(parr[select - 1], root), typeHand(), root, last);
-				delNode(findNode(parr[select], root), root, last);
+				while (getchar() != '\n');
+				insertAfter(findNode(parr[select - 1], list), typeHand(), list);
+				delNode(findNode(parr[select - 1], list), list);
 				printf("Update success\n");
 			} while (select != -1);
 			break;
@@ -99,19 +108,19 @@ int main(int argc, char **argv) {
 			printf("Length of splitting: ");
 			scanf("%d", &numSplit);
 			if (numData > startFrom + numSplit)
-				splitList(startFrom, numSplit, root);
+				splitList(startFrom, numSplit, list, list2);
 			else
-				splitList(startFrom, numData - startFrom, root);
+				splitList(startFrom, numData - startFrom, list, list2);
 			while (getchar() != '\n');
 			printf("Now type in 2 file name to save the new lists\n");
 			printf("File 1: ");
 			scanf("%s", textName1);
 			printf("File 2: ");
 			scanf("%s", textName2);
-			checkList(root2, textName1); //result of splitList
-			checkList(root, textName2);
+			checkList(list2, textName1); //result of splitList
+			checkList(list, textName2);
 			break;
-		case 10: list_reverse(root);
+		case 10: list_reverse(list);
 			break;
 		case 11:
 
@@ -122,9 +131,12 @@ int main(int argc, char **argv) {
 				printf("Can't open file %s\n", fileName);
 				exit(1);
 			}
-			savetoFile(fout, root);
+			savetoFile(fout, list);
 			break;
-		case MAX: exit(1);
+		case MAX:
+			freeList(list);
+			freeList(list2);
+			exit(1);
 		default: printf("Invalid choice. It must be from 1 to %d\n", MAX); break;
 		}
 	} while (choice != MAX);

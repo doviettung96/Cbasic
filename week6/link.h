@@ -9,10 +9,21 @@ typedef struct Node {
   Node* next;
 } Node;
 
-Node *root = NULL;
-Node *last = NULL;
-Node *root2 = NULL;
-Node *last2 = NULL;
+//structure of a single list
+typedef struct slist${
+  Node *root;
+  Node *cur;
+  Node *last;
+} slist;
+
+//initialize a list
+void iniList(slist *list) {
+  list->root = NULL;
+  list->cur = NULL;
+  list->last = NULL;
+}
+
+
 
 //make Node
 Node *makeNode(element_type val) {
@@ -24,26 +35,28 @@ Node *makeNode(element_type val) {
 }
 
 
-// insertNode to end
+// insert Node to end
 
-void insertEnd(element_type val, Node *root, Node *last) {
+void insertEnd(element_type val, slist *list) {
   Node *p;
   p = makeNode(val);
 
-  if (root == NULL) {
-    root = p;
-    last = p;
+  if (list->root == NULL) {
+    list->root = p;
+    list->cur = p;
+    list->last = p;
   } else {
-    last->next = p;
-    last = p;
+    (list->last)->next = p;
+    list->last = p;
+    list->cur = p;
   }
 }
 
 
 // find Node
-Node *findNode(element_type val, Node *root) {
-  Node *p = root;
-  if (root == NULL) return NULL;
+Node *findNode(element_type val, slist *list) {
+  Node *p = list->root;
+  if (list->root == NULL) return NULL;
   else {
     while (p != NULL) {
       if (strcmp(p->element.model, val.model) == 0 && p->element.storage == val.storage &&
@@ -58,9 +71,9 @@ Node *findNode(element_type val, Node *root) {
 
 
 // find pre Node of Node p
-Node *preNode(Node *p, Node *root) {
-  Node *pre = root;
-  if (root == NULL) return NULL;
+Node *preNode(Node *p, slist *list) {
+  Node *pre = list->root;
+  if (list->root == NULL) return NULL;
   else if (pre == p) return pre;
   else {
     while (pre != NULL) {
@@ -73,15 +86,16 @@ Node *preNode(Node *p, Node *root) {
 
 
 // del Node p
-void delNode(Node *p, Node *root, Node *last) {
+void delNode(Node *p, slist *list) {
 
-  Node *pre = preNode(p, root);
-  if (p == root) {
-    root = p->next;
+  Node *pre = preNode(p, list);
+  list->cur = pre;
+  if (p == list->root) {
+    list->root = p->next;
   } else {
     pre->next = p->next;
-    if (p == last) {
-      last = pre;
+    if (p == list->last) {
+      list->last = pre;
     }
   }
   free(p);
@@ -90,30 +104,32 @@ void delNode(Node *p, Node *root, Node *last) {
 
 
 // insert Node before Node p
-void insertBefore(Node *p, element_type val, Node *root) {
+void insertBefore(Node *p, element_type val, slist *list) {
   Node *q = makeNode(val);
-  if (root == NULL) {
+  list->cur = q;
+  if (list->root == NULL) {
     printf("Node haven't create !!");
     return;
-  } else if (root == p) {
-    root = q;
+  } else if (list->root == p) {
+    list->root = q;
     q->next = p;
   } else {
     q->next = p;
-    preNode(p, root)->next = q;
+    preNode(p, list)->next = q;
   }
 }
 
 
 // insert Node after Node p
-void insertAfter(Node *p, element_type val, Node *root, Node *last) {
+void insertAfter(Node *p, element_type val, slist *list) {
   Node *q = makeNode(val);
-  if (root == NULL) {
+  list->cur = q;
+  if (list->root == NULL) {
     printf("Node haven't create !!");
     return;
   } else {
-    if (last == p) {
-      insertEnd(val, root, last);
+    if (list->last == p) {
+      insertEnd(val, list);
       free(q);
     }  else  {
       q->next = p->next;
@@ -122,53 +138,63 @@ void insertAfter(Node *p, element_type val, Node *root, Node *last) {
   }
 }
 
-void display(Node *root) {
+void display(slist *list) {
   Node *p;
-  p = root;
+  p = list->root;
   while ( p != NULL ) {
     printf("%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
     p = p->next;
   }
 }
 
-void savetoFile(FILE *fptr, Node *root) {
+void savetoFile(FILE *fptr, slist *list) {
   Node *p;
-  p = root;
+  p = list->root;
   while ( p != NULL ) {
     fprintf(fptr, "%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
     p = p->next;
   }
 }
 //split a list from startPosition to the end with the length of numSplit
-void splitList(int startPosition, int numSplit, Node *root) {
+void splitList(int startPosition, int numSplit, slist *list, slist *list2) {
   int i = 0;
   int check[numSplit];
   for (i = startPosition; i < startPosition + numSplit; ++i)
   {
-    insertEnd(parr[i], root2, last2);
-    delNode(findNode(parr[i], root), root, last);
+    insertEnd(parr[i], list2);
+    delNode(findNode(parr[i], list), list);
   }
   printf("Split list success\n");
 }
 
-void checkList(Node *root, char fileName[20]) {
+void checkList(slist *list, char fileName[20]) {
   FILE *fptr;
   if ((fptr = fopen(fileName, "wt")) == NULL)
   {
     printf("Can't open file %s\n", fileName);
     exit(1);
   }
-  savetoFile(fptr, root);
+  savetoFile(fptr, list);
 }
 
-Node* list_reverse(Node* root) {
+Node* list_reverse(slist *list) {
   Node *p = NULL, *prev = NULL;
-  prev = preNode(p, root);
-  while (root != NULL) {
-    p = root;
-    root = root->next;
+  prev = preNode(p, list);
+  while (list->root != NULL) {
+    p = list->root;
+    list->root = list->root->next;
     p->next = prev;
     prev = p;
   }
   return prev;
 }
+
+void freeList(slist *list){
+   if (list->root == NULL) return;
+   Node *to_free = list->root;
+   while(to_free != NULL){
+     list->root = (list->root)->next;
+     free(to_free); // free node
+     to_free = list->root;
+   }
+ }

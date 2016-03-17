@@ -154,10 +154,8 @@ void searchModel() {
 
 phone_inf typeHand() {
 	phone_inf p;
-
 	printf("Model: ");
 	scanf("%[^\n]", p.model);
-	while (getchar() != '\n');
 	printf("Storage (GB): "); scanf("%d", &p.storage);
 	printf("Screen size (inches):"); scanf("%f", &p.screensize);
 	printf("Price (VND): "); scanf("%d", &p.price);
