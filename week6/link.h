@@ -10,7 +10,7 @@ typedef struct Node {
 } Node;
 
 //structure of a single list
-typedef struct slist${
+typedef struct slist$ {
   Node *root;
   Node *cur;
   Node *last;
@@ -34,6 +34,22 @@ Node *makeNode(element_type val) {
   return p;
 }
 
+//find the length of a list
+int listLength(slist *list) {
+  Node *p;
+  int i = 0;
+  p = list->root;
+  while (p != NULL) {
+    i++;
+    p = p->next;
+  }
+  return i;
+}
+
+//display a node
+void display(Node *p) {
+  printf("%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
+}
 
 // insert Node to end
 
@@ -138,19 +154,84 @@ void insertAfter(Node *p, element_type val, slist *list) {
   }
 }
 
-void display(slist *list) {
+//insert at position
+Node *insertAtPosition(slist *list, element_type val, int n) {
+  Node *p = list->root;
+  int i = 1;
+  if (list->root == NULL) {
+    printf("Node haven't create !!");
+    return NULL;
+  }
+  if (n < 1 || n > listLength(list))
+  {
+    printf("You've inputed an invalid position\n");
+    return NULL;
+  }
+  if (n == 1)
+    insertAfter(list->root, val, list);
+  else if (n == listLength(list))
+    insertAfter(list->last, val, list);
+  else
+  {
+    while (p != NULL)
+    {
+      i++;
+      if (i = n)
+        break;
+      p = p->next;
+    }
+    insertAfter(p, val, list);
+  }
+  return list->cur;
+}
+
+Node *deleteAtPosition(slist *list, int n) {
+  Node *p = list->root;
+  int i = 1;
+  if (list->root == NULL) {
+    printf("Node haven't create !!");
+    return NULL;
+  }
+  if (n < 1 || n > listLength(list))
+  {
+    printf("You've inputed an invalid position\n");
+    return NULL;
+  }
+  if (n == 1)
+    delNode(list->root, list);
+  else if (n == listLength(list))
+    delNode(list->last, list);
+  else
+  {
+    while (p != NULL)
+    {
+      i++;
+      if (i = n)
+        break;
+      p = p->next;
+    }
+    delNode(p, list);
+  }
+  return list->root;
+}
+
+
+//display a list
+void traverse(slist *list) {
   Node *p;
   p = list->root;
   while ( p != NULL ) {
-    printf("%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
+    display(p);
     p = p->next;
   }
 }
 
+//save the content of list to a data file
 void savetoFile(FILE *fptr, slist *list) {
   Node *p;
   p = list->root;
   while ( p != NULL ) {
+    // fwrite(&p->element, sizeof(element_type), 1, fptr);
     fprintf(fptr, "%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
     p = p->next;
   }
@@ -169,32 +250,68 @@ void splitList(int startPosition, int numSplit, slist *list, slist *list2) {
 
 void checkList(slist *list, char fileName[20]) {
   FILE *fptr;
-  if ((fptr = fopen(fileName, "wt")) == NULL)
+  Node *p = list->root;
+  if ((fptr = fopen(fileName, "w + t")) == NULL)
   {
     printf("Can't open file %s\n", fileName);
     exit(1);
   }
+  // while (p != NULL) {
+  //   fprintf(fptr, "%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
+  //   p = p->next;
+  // }
   savetoFile(fptr, list);
 }
 
-Node* list_reverse(slist *list) {
-  Node *p = NULL, *prev = NULL;
-  prev = preNode(p, list);
+// Node* list_reverse(slist *list) {
+//   Node *p = NULL, *prev = NULL;
+//   prev = preNode(p, list);
+//   list->last = list->root;
+//   p = list->root;
+//   list->root = (list->root)->next;
+//   prev = list->root;
+//   while (list->root != NULL) {
+//     p = list->root;
+//     list->root = list->root->next;
+//     p->next = prev;
+//     prev = p;
+//   }
+//   return prev;
+// }
+
+// reverse list
+void list_reverse(slist *list) {
+  Node *z, *p;
+  list->last = list->root;
+
+
+  p = list->root;
+
+  list->root = list->root->next;
+
+  z = list->root;
+  list->root = list->root->next;
+  z->next = p;
+
+
   while (list->root != NULL) {
-    p = list->root;
+    p = z;
+    z = list->root;
     list->root = list->root->next;
-    p->next = prev;
-    prev = p;
+    z->next = p ;
   }
-  return prev;
+
+  list->root = z;
+  list->last->next = NULL;
+  list->cur = list->root;
 }
 
-void freeList(slist *list){
-   if (list->root == NULL) return;
-   Node *to_free = list->root;
-   while(to_free != NULL){
-     list->root = (list->root)->next;
-     free(to_free); // free node
-     to_free = list->root;
-   }
- }
+void freeList(slist *list) {
+  if (list->root == NULL) return;
+  Node *to_free = list->root;
+  while (to_free != NULL) {
+    list->root = (list->root)->next;
+    free(to_free); // free node
+    to_free = list->root;
+  }
+}

@@ -1,7 +1,6 @@
-#include "tgdd.h"
-#include "link.h"
+#include "phone.h"
+#include "link2.h"
 
-// #define NUMDATA 138
 int result;
 
 
@@ -17,7 +16,7 @@ int main(int argc, char **argv) {
 	char fileName[15]; //file name for output data
 	char textName1[20], textName2[20]; // file name for split lists
 
-	char sections [MAX][40] = {"Import from nokiaDB.dat", "Display (traverse)", "Add new phone (insert before/after)",
+	char sections [MAX][40] = {"Import from phonebook.dat", "Display (traverse)", "Add new contact (insert before/after)",
 	                           "Insert a position" , "Delete a position", "Delete current",
 	                           "Delete first", "Search and Update", "Divide and Extract",
 	                           "Reverse list", "Save to file", "Exit (free)"
@@ -65,9 +64,9 @@ int main(int argc, char **argv) {
 			fseek(fin, 0, SEEK_END);
 			numData = ftell(fin) / sizeof(element_type);
 			rewind(fin);
-			result = importfromDB(fin, numData);
+			result = import(fin, numData);
 			for (i = 0; i < result; ++i)
-				insertEnd(parr[i], list);
+				insertEnd(contact[i], list);
 			// printData();
 			fclose(fin);
 			break;
@@ -88,19 +87,21 @@ int main(int argc, char **argv) {
 			printf("Type in the data to insert\n");
 			while (getchar() != '\n');
 			if (select < numData)
-				insertAfter(findNode(parr[select - 1], list), typeHand(), list);
+				// list->cur = insertAtPosition(list, typeHand(), select);
+				insertAfter(findNode(contact[select - 1], list), typeHand(), list);
 			else
 				insertEnd(typeHand(), list);
 			break;
 		case 5: printf("Position to delete: (1 means root element)");
 			scanf("%d", &select);
-			delNode(findNode(parr[select - 1], list), list);
+			// deleteAtPosition(list, select);
+			delNode(findNode(contact[select - 1], list), list);
 			break;
 		case 6: delNode(list->cur, list);
 			break;
 		case 7: delNode(list->root, list);
 			break;
-		case 8: searchModel();
+		case 8: searchName();
 			while (1) {
 
 				printf("Update for position number (type -1 to stop updating): ");
@@ -109,9 +110,9 @@ int main(int argc, char **argv) {
 				if (select == -1)
 					break;
 
-				insertAfter(findNode(parr[select - 1], list), typeHand(), list);
+				insertAfter(findNode(contact[select - 1], list), typeHand(), list);
 
-				delNode(findNode(parr[select - 1], list), list);
+				delNode(findNode(contact[select - 1], list), list);
 				printf("Update success\n");
 			}
 			break;

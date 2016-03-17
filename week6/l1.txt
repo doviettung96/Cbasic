@@ -1,0 +1,6 @@
+Sony Xperia E4                	8  	5.0	3290000  
+Sony Xperia M2                	8  	4.8	4990000  
+Sony Xperia M2 Aqua           	8  	4.8	6990000  
+Sony Xperia T2 Ultra          	8  	6.0	7490000  
+Sony Xperia Z1 C6902          	16 	5.0	10490000 
+Sony Xperia Z2                	16 	5.2	11990000 
