@@ -1,7 +1,13 @@
-all: ex1 test add
-ex1: ex1.c
-	gcc -o ex1 ex1.c
+all: test add subtract convert pair dlink
 test: test.c
 	gcc -o test test.c
 add: add.c
 	gcc -o add add.c
+subtract: subtract.c
+	gcc -o subtract subtract.c
+convert: convert.c
+	gcc -o convert convert.c
+pair: pair.c
+	gcc -o pair pair.c
+dlink: dlink.c
+	gcc -o dlink dlink.c

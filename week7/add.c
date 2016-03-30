@@ -58,14 +58,14 @@ int addsameSize(stack_type *s1, stack_type *s2, stack_type *result, int length) 
 		sub1 = pop(s1);
 		sub2 = pop(s2);
 
-		if (sub1 + sub2 + extra - '0' > '9') {
-			extra = 1;
+		if (sub1 + sub2 + extra - '0' > '9') {	
 			sum = sub1 + sub2 + extra - '0' - 9;
+			extra = 1;
 		}
 		else
-		{
-			extra = 0;
+		{	
 			sum = sub1 + sub2 - '0';
+			extra = 0;
 		}
 		push(sum, result);
 	}
@@ -80,6 +80,7 @@ void addExtra(stack_type *result, stack_type *addFrom, int length, int extra) {
 	{
 		n = pop(addFrom);
 		n += extra;
+		extra = 0;
 		if (n > '9')
 		{
 			n -= 9;

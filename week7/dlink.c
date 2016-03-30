@@ -5,8 +5,8 @@ int result;
 
 
 int main(int argc, char **argv) {
-	dlist *dlist;
-	dlist *dlist2;
+	dlist *list;
+	dlist *list2;
 	int choice;
 	int i = 0;
 	int numData;
@@ -43,18 +43,9 @@ int main(int argc, char **argv) {
 
 			// fclose(fin);
 			// fclose(fout);
-			dlist = (dlist *)malloc(sizeof(dlist));
-			if (dlist == NULL) {
-				fprintf(stderr, "ERROR : Allocated memory failed !!\n");
-				exit(1);
-			}
-			dlist2 = (dlist *)malloc(sizeof(dlist));
-			if (dlist2 == NULL) {
-				fprintf(stderr, "ERROR : Allocated memory failed !!\n");
-				exit(1);
-			}
-			iniList(dlist);
-			iniList(dlist2);
+			
+			list = iniList(list);
+			list2 = iniList(list2);
 
 			if ((fin = fopen(argv[1], "rb")) == NULL)
 			{
@@ -66,21 +57,21 @@ int main(int argc, char **argv) {
 			rewind(fin);
 			result = import(fin, numData);
 			for (i = 0; i < result; ++i)
-				insertEnd(contact[i], dlist);
+				insertEnd(contact[i], list);
 			// printData();
 			fclose(fin);
 			break;
 		case 2:
-			traverse(dlist);
+			traverse(list);
 			break;
 		case 3:
 			printf("Enter 0 to insert before, 1 to insert after: ");
 			scanf("%d", &select);
 			while (getchar() != '\n');
 			if (select == 0)
-				insertBefore(list->root, typeHand(), dlist);
+				insertBefore(list->root, typeHand(), list);
 			else
-				insertEnd(typeHand(), dlist);
+				insertEnd(typeHand(), list);
 			break;
 		case 4: printf("Position to insert after (1 means root element): ");
 			scanf("%d", &select);
@@ -88,18 +79,18 @@ int main(int argc, char **argv) {
 			while (getchar() != '\n');
 			if (select < numData)
 				// list->cur = insertAtPosition(list, typeHand(), select);
-				insertAfter(findNode(contact[select - 1], dlist), typeHand(), dlist);
+				insertAfter(locateNode(select, list), typeHand(), list);
 			else
-				insertEnd(typeHand(), dlist);
+				insertEnd(typeHand(), list);
 			break;
 		case 5: printf("Position to delete: (1 means root element)");
 			scanf("%d", &select);
 			// deleteAtPosition(list, select);
-			delNode(findNode(contact[select - 1], dlist), dlist);
+			delNode(locateNode(select, list), list);
 			break;
-		case 6: delNode(list->cur, dlist);
+		case 6: delNode(list->cur, list);
 			break;
-		case 7: delNode(list->root, dlist);
+		case 7: delNode(list->root, list);
 			break;
 		case 8: searchName();
 			while (1) {
@@ -110,31 +101,32 @@ int main(int argc, char **argv) {
 				if (select == -1)
 					break;
 
-				insertAfter(findNode(contact[select - 1], dlist), typeHand(), dlist);
+				insertAfter(locateNode(select, list), typeHand(), list);
 
-				delNode(findNode(contact[select - 1], dlist), dlist);
+				delNode(locateNode(select, list), list);
 				printf("Update success\n");
 			}
 			break;
 		case 9:
-			printf("Type in where to start (range from 0 to end of the dlist): ");
+			printf("Type in where to start (range from 0 to end of the list): ");
 			scanf("%d", &startFrom);
-			printf("Length of splitting: ");
+			printf("Length of spliting: ");
 			scanf("%d", &numSplit);
-			if (listLength(dlist) > startFrom + numSplit)
-				splitList(startFrom, numSplit, dlist, dlist2);
+			if (listLength(list) > startFrom + numSplit)
+				splitList(startFrom, numSplit, list, list2);
 			else
-				splitList(startFrom, listLength(dlist) - startFrom, dlist, dlist2);
+				splitList(startFrom, listLength(list) - startFrom, list, list2);
 			while (getchar() != '\n');
 			printf("Now type in 2 file name to save the new lists\n");
 			printf("File 1: ");
 			scanf("%s", textName1);
 			printf("File 2: ");
 			scanf("%s", textName2);
-			checkList(dlist2, textName1); //result of splitList
-			checkList(dlist, textName2);
+			checkList(list2, textName1); //result of splitList
+			checkList(list, textName2);
 			break;
-		case 10: list_reverse(dlist);
+		case 10:
+			reverseList(list);
 			break;
 		case 11:
 			printf("Type in the file name\n");
@@ -144,11 +136,11 @@ int main(int argc, char **argv) {
 				printf("Can't open file %s\n", fileName);
 				exit(1);
 			}
-			savetoFile(fout, dlist);
+			savetoFile(fout, list);
 			break;
 		case MAX:
-			freeList(dlist);
-			freeList(dlist2);
+			freeList(list);
+			freeList(list2);
 			exit(1);
 		default: printf("Invalid choice. It must be from 1 to %d\n", MAX); break;
 		}
