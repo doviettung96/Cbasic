@@ -7,9 +7,12 @@ int result;
 int main(int argc, char **argv) {
 	dlist *list;
 	dlist *list2;
+	dlist *list3;
+	dlist *list4;
 	int choice;
 	int i = 0;
 	int numData;
+	Node *p;
 	FILE *fin, *fout;
 	int select = 0;
 	int startFrom, numSplit; // where to split and the length of splitting list
@@ -19,7 +22,7 @@ int main(int argc, char **argv) {
 	char sections [MAX][40] = {"Import from phonebook.dat", "Display (traverse)", "Add new contact (insert before/after)",
 	                           "Insert a position" , "Delete a position", "Delete current",
 	                           "Delete first", "Search and Update", "Divide and Extract",
-	                           "Reverse list", "Save to file", "Exit (free)"
+	                           "Reverse list", "Save to file", "Count max identical phone numbers", "Exit (free)"
 	                          };
 
 
@@ -43,10 +46,11 @@ int main(int argc, char **argv) {
 
 			// fclose(fin);
 			// fclose(fout);
-			
+
 			list = iniList(list);
 			list2 = iniList(list2);
-
+			list3 = iniList(list3);
+			list4 = iniList(list4);
 			if ((fin = fopen(argv[1], "rb")) == NULL)
 			{
 				printf("Can't open file %s\n", argv[1]);
@@ -78,14 +82,12 @@ int main(int argc, char **argv) {
 			printf("Type in the data to insert\n");
 			while (getchar() != '\n');
 			if (select < numData)
-				// list->cur = insertAtPosition(list, typeHand(), select);
 				insertAfter(locateNode(select, list), typeHand(), list);
 			else
 				insertEnd(typeHand(), list);
 			break;
 		case 5: printf("Position to delete: (1 means root element)");
 			scanf("%d", &select);
-			// deleteAtPosition(list, select);
 			delNode(locateNode(select, list), list);
 			break;
 		case 6: delNode(list->cur, list);
@@ -102,20 +104,20 @@ int main(int argc, char **argv) {
 					break;
 
 				insertAfter(locateNode(select, list), typeHand(), list);
-
 				delNode(locateNode(select, list), list);
 				printf("Update success\n");
 			}
 			break;
 		case 9:
-			printf("Type in where to start (range from 0 to end of the list): ");
+			printf("The length of the list is %d\n", listLength(list));
+			printf("Type in where to start (range from 1 to end of the list): ");
 			scanf("%d", &startFrom);
 			printf("Length of spliting: ");
 			scanf("%d", &numSplit);
 			if (listLength(list) > startFrom + numSplit)
-				splitList(startFrom, numSplit, list, list2);
+				splitList(startFrom, numSplit, list, list2, list3);
 			else
-				splitList(startFrom, listLength(list) - startFrom, list, list2);
+				splitList(startFrom, listLength(list) - startFrom, list, list2, list3);
 			while (getchar() != '\n');
 			printf("Now type in 2 file name to save the new lists\n");
 			printf("File 1: ");
@@ -123,7 +125,7 @@ int main(int argc, char **argv) {
 			printf("File 2: ");
 			scanf("%s", textName2);
 			checkList(list2, textName1); //result of splitList
-			checkList(list, textName2);
+			checkList(list3, textName2);
 			break;
 		case 10:
 			reverseList(list);
@@ -138,10 +140,22 @@ int main(int argc, char **argv) {
 			}
 			savetoFile(fout, list);
 			break;
+		case 12:
+			list4 = countsameNum(list, list4);
+			printf("After spliting, the new list with identical numbers: \n");
+			p = list4->root;
+			while ( p != NULL ) {
+				printf("Node with phone number: %s, address %p\n", p->element.tel, p);
+				p = p->next;
+			}
+			break;
 		case MAX:
 			freeList(list);
 			freeList(list2);
+			freeList(list3);
+			freeList(list4);
 			exit(1);
+			break;
 		default: printf("Invalid choice. It must be from 1 to %d\n", MAX); break;
 		}
 	} while (choice != MAX);

@@ -7,8 +7,8 @@ void main() {
 	char s[20];
 	int i;
 	stack_type *st;
-	st = (stack_type *)malloc(sizeof(stack_type));
-	iniStack(st);
+	
+	st = iniStack(st);
 	printf("Type in a string of literal\n");
 	scanf("%s", s);
 	if(check(s, strlen(s), st))

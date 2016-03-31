@@ -4,15 +4,14 @@ int getMenu(char sections[][100], int maxsection);
 void detoBinary(int n, stack_type *s);
 void detoHex(int n, stack_type * s);
 
-void main(int argc, char **argv) {
+int main() {
 	int n;
 	int choice;
 	char sections[3][100] = {"Convert the decimal number into binary form",
 	                         "Convert the decimal number into hexadecimal form", "Exit"
 	                        };
 	stack_type *s;
-	s = (stack_type *)malloc(sizeof(stack_type));
-	iniStack(s);
+	s = iniStack(s);
 
 	do {
 		choice = getMenu(sections, 3);
@@ -28,13 +27,12 @@ void main(int argc, char **argv) {
 			detoHex(n, s);
 			break;
 		case 3:
-			exit(1);
 			break;
 		default: printf("Invalid choice. It must be from 1 to %d\n", 3);
 			break;
 		}
 	} while (choice != 3);
-
+	return 0;
 }
 
 int getMenu(char sections[][100], int maxsection) {
@@ -59,8 +57,11 @@ void detoBinary(int n, stack_type * s) {
 		push(mod, s);
 	}
 	printf("The number %d in binary is: \n", first);
-	while (result = pop(s))
+	while (!(empty(s)))
+	{
+		result = pop(s);
 		printf("%c\n", result);
+	}
 }
 
 //convert from decimal to hex
@@ -85,6 +86,9 @@ void detoHex(int n, stack_type * s) {
 		push(mod, s);
 	}
 	printf("The number %d in hexadecimal is: \n", first);
-	while (result = pop(s))
+	while (!(empty(s)))
+	{	
+		result = pop(s) ;
 		printf("%c\n", result);
+	}
 }

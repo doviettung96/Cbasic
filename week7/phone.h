@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX 12
+#define MAX 13
 
 //the phone book structure
 typedef struct {

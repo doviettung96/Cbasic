@@ -13,8 +13,10 @@ typedef struct stack_type$ {
 } stack_type;
 
 //initialize a stack
-void iniStack(stack_type *stack) {
+stack_type *iniStack(stack_type *stack) {
+  stack = (stack_type *)malloc(sizeof(stack_type));
   stack->top = NULL;
+  return stack;
 }
 
 int empty(stack_type *stack) {

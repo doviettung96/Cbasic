@@ -10,12 +10,10 @@ void main() {
 	char a[10000], b[10000];
 	int extra;
 	int length;
-	result = (stack_type *)malloc(sizeof(stack_type));
-	s1 = (stack_type *)malloc(sizeof(stack_type));
-	s2 = (stack_type *)malloc(sizeof(stack_type));
-	iniStack(result);
-	iniStack(s1);
-	iniStack(s2);
+	
+	result = iniStack(result);
+	s1 = iniStack(s1);
+	s2 = iniStack(s2);
 
 	printf("Insert two number\n");
 	printf("a = ");

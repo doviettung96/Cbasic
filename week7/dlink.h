@@ -177,15 +177,18 @@ void traverse(dlist *list) {
 }
 
 //split a list from startPosition to the end with the length of numSplit
-void splitList(int startPosition, int numSplit, dlist *list, dlist *list2) {
+void splitList(int startPosition, int numSplit, dlist *list, dlist *list2, dlist *list3) {
 	Node *p;
-	int i = 0;
+	int i;
 	int check[numSplit];
-	for (i = startPosition; i < startPosition + numSplit; ++i)
+	printf("The length of the list is %d\n", listLength(list));
+	for (i = 1; i <= listLength(list); ++i)
 	{
 		p = locateNode(i, list);
-		insertEnd(p->element, list2);
-		delNode(p, list);
+		if (i >= startPosition && i < startPosition + numSplit)
+			insertEnd(p->element, list2);
+		else
+			insertEnd(p->element, list3);
 	}
 	printf("Split list success\n");
 }
@@ -254,8 +257,48 @@ void reverseList(dlist *list) {
 	list->last->next = NULL;
 	list->cur = list->root;
 }
+//count the identical phone number elements and extract them
+dlist *countsameNum(dlist *list, dlist *list2) {
+	int max = 0;
+	Node *p, *q;
+	int i = 0;
+	int j;
+	int length = listLength(list);
+	int check[length];
+	int count[length];
+	for (i = 0; i < length; ++i)
+		count[i] = 0;
 
-void freeList(dlist *list) {
+	for (i = 0, p = locateNode(i + 1, list); i < length - 1; ++i)
+		for (q = p; q != NULL; q = q->next)
+			if (strcmp(p->element.tel, q->element.tel) == 0)
+				count[i] = count[i] + 1;
+
+	for (i = 0; i < length; ++i) {
+		if (max < count[i])
+		{
+			max = count[i];
+			j = i;
+		}
+		// printf("Count[%d] = %d\n", i + 1, count[i]);
+	}
+	if (max > 0)
+		printf("The maximum number of identical phone numbers is %d\n", max);
+
+	printf("The nodes that have maximum identical phone numbers are: \n");
+
+	if (max != 0) {
+		p = locateNode(j + 1, list);
+		for (q = p; q != NULL; q = q->next)
+			if (strcmp(q->element.tel, p->element.tel) == 0)
+			{
+				printf("Node with phone number: %s, address: %p\n", q->element.tel, q);
+				insertEnd(q->element, list2);
+			}
+	}
+	return list2;
+}
+void freeList(dlist * list) {
 	if (list->root == NULL)
 		return;
 	Node *to_free = list->root;
