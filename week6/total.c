@@ -8,6 +8,7 @@ int result;
 int main(int argc, char **argv) {
 	slist *list;
 	slist *list2;
+	slist *list3;
 	int choice;
 	int i = 0;
 	int numData;
@@ -44,19 +45,10 @@ int main(int argc, char **argv) {
 
 			// fclose(fin);
 			// fclose(fout);
-			list = (slist *)malloc(sizeof(slist));
-			if (list == NULL) {
-				fprintf(stderr, "ERROR : Allocated memory failed !!\n");
-				exit(1);
-			}
-			list2 = (slist *)malloc(sizeof(slist));
-			if (list2 == NULL) {
-				fprintf(stderr, "ERROR : Allocated memory failed !!\n");
-				exit(1);
-			}
-			iniList(list);
-			iniList(list2);
 
+			list = iniList(list);
+			list2 = iniList(list2);
+			list3 = iniList(list3);
 			if ((fin = fopen(argv[1], "rb")) == NULL)
 			{
 				printf("Can't open file %s\n", argv[1]);
@@ -88,13 +80,13 @@ int main(int argc, char **argv) {
 			printf("Type in the data to insert\n");
 			while (getchar() != '\n');
 			if (select < numData)
-				insertAfter(findNode(parr[select - 1], list), typeHand(), list);
+				insertAfter(locateNode(select, list), typeHand(), list);
 			else
 				insertEnd(typeHand(), list);
 			break;
 		case 5: printf("Position to delete: (1 means root element)");
 			scanf("%d", &select);
-			delNode(findNode(parr[select - 1], list), list);
+			delNode(locateNode(select, list), list);
 			break;
 		case 6: delNode(list->cur, list);
 			break;
@@ -109,21 +101,21 @@ int main(int argc, char **argv) {
 				if (select == -1)
 					break;
 
-				insertAfter(findNode(parr[select - 1], list), typeHand(), list);
-
-				delNode(findNode(parr[select - 1], list), list);
+				insertAfter(locateNode(select, list), typeHand(), list);
+				delNode(locateNode(select, list), list);
 				printf("Update success\n");
 			}
 			break;
 		case 9:
-			printf("Type in where to start (range from 0 to end of the list): ");
+			printf("The length of the list is %d\n", listLength(list));
+			printf("Type in where to start (range from 1 to end of the list): ");
 			scanf("%d", &startFrom);
-			printf("Length of splitting: ");
+			printf("Length of spliting: ");
 			scanf("%d", &numSplit);
 			if (listLength(list) > startFrom + numSplit)
-				splitList(startFrom, numSplit, list, list2);
+				splitList(startFrom, numSplit, list, list2, list3);
 			else
-				splitList(startFrom, listLength(list) - startFrom, list, list2);
+				splitList(startFrom, listLength(list) - startFrom, list, list2, list3);
 			while (getchar() != '\n');
 			printf("Now type in 2 file name to save the new lists\n");
 			printf("File 1: ");
@@ -131,9 +123,10 @@ int main(int argc, char **argv) {
 			printf("File 2: ");
 			scanf("%s", textName2);
 			checkList(list2, textName1); //result of splitList
-			checkList(list, textName2);
+			checkList(list3, textName2);
 			break;
-		case 10: list_reverse(list);
+		case 10:
+			list_reverse(list);
 			break;
 		case 11:
 			printf("Type in the file name\n");
@@ -148,6 +141,7 @@ int main(int argc, char **argv) {
 		case MAX:
 			freeList(list);
 			freeList(list2);
+			freeList(list3);
 			exit(1);
 		default: printf("Invalid choice. It must be from 1 to %d\n", MAX); break;
 		}

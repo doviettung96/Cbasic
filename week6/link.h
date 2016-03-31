@@ -17,12 +17,17 @@ typedef struct slist$ {
 } slist;
 
 //initialize a list
-void iniList(slist *list) {
+slist *iniList(slist *list) {
+  list = (slist *)malloc(sizeof(slist));
+  if (list == NULL) {
+    fprintf(stderr, "ERROR : Allocated memory failed !!\n");
+    exit(1);
+  }
   list->root = NULL;
   list->cur = NULL;
   list->last = NULL;
+  return list;
 }
-
 
 
 //make Node
@@ -77,7 +82,10 @@ Node *findNode(element_type val, slist *list) {
     while (p != NULL) {
       if (strcmp(p->element.model, val.model) == 0 && p->element.storage == val.storage &&
           p->element.screensize == val.screensize && p->element.price == val.price)
+      {
+        list->cur = p;
         return p;
+      }
       else p = p->next ;
     }
     printf("Not found \n");
@@ -85,6 +93,23 @@ Node *findNode(element_type val, slist *list) {
   }
 }
 
+//locate n-th Node in a list
+Node *locateNode(int n, slist *list) {
+  int i = 0;
+  Node *p = list->root;
+  if (n > listLength(list))
+  {
+    printf("Not found!!\n");
+    return NULL;
+  }
+  if (list->root == NULL)
+    return NULL;
+  for (i = 0; i < n; ++i) {
+    list->cur = p;
+    p = p->next;
+  }
+  return list->cur;
+}
 
 // find pre Node of Node p
 Node *preNode(Node *p, slist *list) {
@@ -93,7 +118,11 @@ Node *preNode(Node *p, slist *list) {
   else if (pre == p) return pre;
   else {
     while (pre != NULL) {
-      if (pre->next == p) return pre;
+      if (pre->next == p)
+      {
+        list->cur = p;
+        return pre;
+      }
       pre = pre->next;
     }
     return NULL;
@@ -103,7 +132,6 @@ Node *preNode(Node *p, slist *list) {
 
 // del Node p
 void delNode(Node *p, slist *list) {
-
   Node *pre = preNode(p, list);
   list->cur = pre;
   if (p == list->root) {
@@ -154,68 +182,6 @@ void insertAfter(Node *p, element_type val, slist *list) {
   }
 }
 
-//insert at position
-Node *insertAtPosition(slist *list, element_type val, int n) {
-  Node *p = list->root;
-  int i = 1;
-  if (list->root == NULL) {
-    printf("Node haven't create !!");
-    return NULL;
-  }
-  if (n < 1 || n > listLength(list))
-  {
-    printf("You've inputed an invalid position\n");
-    return NULL;
-  }
-  if (n == 1)
-    insertAfter(list->root, val, list);
-  else if (n == listLength(list))
-    insertAfter(list->last, val, list);
-  else
-  {
-    while (p != NULL)
-    {
-      i++;
-      if (i = n)
-        break;
-      p = p->next;
-    }
-    insertAfter(p, val, list);
-  }
-  return list->cur;
-}
-
-Node *deleteAtPosition(slist *list, int n) {
-  Node *p = list->root;
-  int i = 1;
-  if (list->root == NULL) {
-    printf("Node haven't create !!");
-    return NULL;
-  }
-  if (n < 1 || n > listLength(list))
-  {
-    printf("You've inputed an invalid position\n");
-    return NULL;
-  }
-  if (n == 1)
-    delNode(list->root, list);
-  else if (n == listLength(list))
-    delNode(list->last, list);
-  else
-  {
-    while (p != NULL)
-    {
-      i++;
-      if (i = n)
-        break;
-      p = p->next;
-    }
-    delNode(p, list);
-  }
-  return list->root;
-}
-
-
 //display a list
 void traverse(slist *list) {
   Node *p;
@@ -236,14 +202,20 @@ void savetoFile(FILE *fptr, slist *list) {
     p = p->next;
   }
 }
+
 //split a list from startPosition to the end with the length of numSplit
-void splitList(int startPosition, int numSplit, slist *list, slist *list2) {
-  int i = 0;
+void splitList(int startPosition, int numSplit, slist *list, slist *list2, slist *list3) {
+  Node *p;
+  int i;
   int check[numSplit];
-  for (i = startPosition; i < startPosition + numSplit; ++i)
+  printf("The length of the list is %d\n", listLength(list));
+  for (i = 1; i <= listLength(list); ++i)
   {
-    insertEnd(parr[i], list2);
-    delNode(findNode(parr[i], list), list);
+    p = locateNode(i, list);
+    if (i >= startPosition && i < startPosition + numSplit)
+      insertEnd(p->element, list2);
+    else
+      insertEnd(p->element, list3);
   }
   printf("Split list success\n");
 }

@@ -26,7 +26,6 @@ int getMenu(char sections[][40], int maxsection) {
 }
 
 int import(FILE *f, int numLine) {
-	int result;
 	contact = (phone_addr *)malloc(numLine * sizeof(phone_addr));
 	result = fread(contact, sizeof(phone_addr), numLine, f);
 	rewind(f);
