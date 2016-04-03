@@ -113,7 +113,7 @@ void delNode(Node *p, dlist *list) {
 		return;
 	if (p == list->root) {
 		list->root = p->next;
-		p->next->prev = NULL;
+		p->next->prev = NULL; //careful , maybe core dump
 		free(p);
 	}
 	else if (p == list->last) {
