@@ -1,0 +1,5 @@
+Time	Num of customers
+9:00	2
+9:10	1
+9:25	3
+9:40	2
