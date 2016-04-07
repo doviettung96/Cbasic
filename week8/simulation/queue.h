@@ -37,9 +37,14 @@ element_type deQueue(queue_type *q) {
 }
 
 void display(Node *p) {
-	printf("ID: %d\n", p->element.id);
-	printf("Memory: %d\n", p->element.mem);
-	printf("Status: %s\n", p->element.status == 1 ? "Running" : "Waiting");
+	if (p == NULL)
+		printf("Empty node\n");
+	else
+	{
+		printf("ID: %d\n", p->element.id);
+		printf("Memory: %d\n", p->element.mem);
+		printf("Status: %s\n", p->element.status == 1 ? "Running" : "Waiting");
+	}
 }
 
 void traverse(queue_type *q) {

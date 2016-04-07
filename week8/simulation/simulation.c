@@ -14,7 +14,7 @@ void main() {
 	run = iniQueue(run);
 	wait = iniQueue(wait);
 
-	char sections[MAX][40] = {"Create new program", "Kill a program", "Show programs status", "Exit"};
+	char sections[MAX][40] = {"Create new program", "Kill a recent program", "Show programs status", "Exit"};
 
 	printf("Process simulator\n");
 	printf("Type in the number of parallel processes: ");
@@ -27,7 +27,8 @@ void main() {
 		switch (choice) {
 		case 1:
 			process = create(memNum, parNum);
-			if (process.status == 1) {
+			if (process.status == 1)
+			{
 				memNum -= process.mem;
 				parNum--;
 				enQueue(process, run);
@@ -41,15 +42,21 @@ void main() {
 			parNum++;
 			printf("Auto run a waiting program\n");
 			process = deQueue(wait);
-			if (process.mem < memNum) //how about priorize a process that has memory < memNum?
+			if (process.mem < memNum && parNum > 0) //how about priorize a process that has memory < memNum?
 			{
 				process.status = 1;
 				enQueue(process, run);
 				memNum -= process.mem;
 				parNum--;
 			}
+			else
+			{
+				enQueue(process, wait);
+				printf("The waiting program doesn't meet the requirements to be re-run\n");
+			}
 			break;
 		case 3:
+			printf("Remaining memory: %d (MB)\n", memNum);
 			traverse(run);
 			traverse(wait);
 			break;
