@@ -2,9 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef int element_type;
 typedef struct TNode {
-	element_type info;
+	void *info;
 	struct TNode *left;
 	struct TNode *right;
 } TNode;
@@ -16,7 +15,7 @@ void makeNullTree(tree_type *tree) {
 	(*tree) = NULL;
 }
 
-TNode *makeTNode(element_type val) {
+TNode *makeTNode(void *val) {
 	TNode *p;
 	p = (TNode *)malloc(sizeof(TNode));
 	p->left = NULL;
@@ -55,32 +54,29 @@ TNode *rightChild(TNode *p) {
 int isLeaf(tree_type p) {
 	if (p != NULL)
 		if (leftChild(p) == NULL && rightChild(p) == NULL)
-			return -1;
+			return 1;
 }
 
-tree_type randomInsert(tree_type tree, element_type val)
-{
-	TNode *new, *p;
-	new = makeTNode(val);
-	if (tree == NULL)
-		return new;
-	if (rand() % 2 == 0)
+tree_type constructTree(void *preval, char preLN[], int *index_ptr, int n) {
+	int index = *index_ptr;
+	char *s;
+	if (index == n)
+		return NULL;
+	TNode *temp;
+	s = (char *)preval;
+	temp = makeTNode(s + index * 10);
+	(*index_ptr)++;
+	if (preLN[index] == 'N')
 	{
-		p = tree;
-		while (p->left != NULL)
-			p = p->left;
-		p->left = new;
-		printf("Node %d is left child of %d\n", val, p->info);
+		temp->left = constructTree(preval, preLN, index_ptr, n);
+		temp->right = constructTree(preval, preLN, index_ptr, n);
 	}
-	else
-	{
-		p = tree;
-		while (p->right != NULL)
-			p = p->right;
-		p->right = new;
-		printf("Node %d is right child of %d\n", val, p->info);
-	}
-	return tree;
+	return temp;
+}
+
+tree_type buildTree(void *preval, char preLN[], int n) {
+	int index = 0;
+	return constructTree(preval, preLN, &index, n);
 }
 
 int countNode(tree_type tree) {
@@ -90,19 +86,13 @@ int countNode(tree_type tree) {
 		return 1 + countNode(leftChild(tree)) + countNode(rightChild(tree));
 }
 
-//doesn't work normally
 int countLeaves(tree_type tree) {
-	int s = 0;
-	int l, r;
 	if (emptyTree(tree))
 		return 0;
-	l = isLeaf(tree->left);
-	r = isLeaf(tree->right);
-	if (l != -1)
-		s += l;
-	if (r != -1)
-		s += r;
-	return countLeaves(leftChild(tree)) + countLeaves(rightChild(tree)) + s;
+	else if (tree->left == NULL && tree->right == NULL)
+		return 1;
+	else
+		return countLeaves(tree->left) + countLeaves(tree->right);
 }
 
 int height(tree_type tree) {
@@ -123,19 +113,6 @@ int depth(tree_type tree, TNode *p, int d)
 	}
 }
 
-//doesn't work normally
-int countinternalNode(tree_type tree) {
-	if (tree == NULL) return 0;
-	else {
-		int l = isLeaf(tree->left),
-		    r = isLeaf(tree->right),
-		    s = 0;
-		if (l != -1) s += (l == 0) ? 1 : 0;
-		if (r != -1) s += (r == 0) ? 1 : 0;
-		return s + countinternalNode(tree->left) + countinternalNode(tree->right);
-	}
-}
-
 int nb_right(tree_type tree) {
 	if (tree == NULL) return 0;
 	else {
@@ -145,7 +122,7 @@ int nb_right(tree_type tree) {
 	}
 }
 
-tree_type createFrom2(element_type val, tree_type left, tree_type right)
+tree_type createFrom2(void *val, tree_type left, tree_type right)
 {
 	TNode *new;
 	new = makeTNode(val);
@@ -154,7 +131,7 @@ tree_type createFrom2(element_type val, tree_type left, tree_type right)
 	return new;
 }
 
-tree_type addtoLeftmost(tree_type *tree, element_type val)
+tree_type addtoLeftmost(tree_type *tree, void *val)
 {
 	TNode *new;
 	new = makeTNode(val);
@@ -172,7 +149,7 @@ tree_type addtoLeftmost(tree_type *tree, element_type val)
 	return new;
 }
 
-tree_type addtorightmost(tree_type *tree, element_type val)
+tree_type addtorightmost(tree_type *tree, void *val)
 {
 	TNode *new;
 	new = makeTNode(val);
@@ -190,33 +167,33 @@ tree_type addtorightmost(tree_type *tree, element_type val)
 	return new;
 }
 
-void preOrder(tree_type tree)
+void preOrder(tree_type tree, void (*order)(tree_type))
 {
 	if (tree != NULL)
 	{
-		printf("%d\n", tree->info);
-		preOrder(tree->left);
-		preOrder(tree->right);
+		order(tree);
+		preOrder(tree->left, order);
+		preOrder(tree->right, order);
 	}
 }
 
-void inOrder(tree_type tree)
+void inOrder(tree_type tree, void (*order)(tree_type))
 {
 	if (tree != NULL)
 	{
-		inOrder(tree->left);
-		printf("%d\n", tree->info);
-		inOrder(tree->right);
+		inOrder(tree->left, order);
+		order(tree);
+		inOrder(tree->right, order);
 	}
 }
 
-void postOrder(tree_type tree)
+void postOrder(tree_type tree, void (*order)(tree_type))
 {
 	if (tree != NULL)
 	{
-		postOrder(tree->left);
-		postOrder(tree->right);
-		printf("%d\n", tree->info);
+		postOrder(tree->left, order);
+		postOrder(tree->right, order);
+		order(tree);
 	}
 }
 
