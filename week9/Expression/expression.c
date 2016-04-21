@@ -27,11 +27,14 @@ void main(int argc, char **argv)
 	printf("Type in an infix expression\n");
 	scanf("%s", infix);
 
+	//This part is about to convert an infix expression into postfix
 	for (i = 0; i < strlen(infix); ++i)
 	{
+		//if we meet open literal likes (, just push into stack
 		if (openLiteral(infix[i]))
 			push(&infix[i], stack);
 
+		//if we meet the close literal likes ), keep poping from stack until meet the corresponding open literal
 		else if (closeLiteral(infix[i]))
 		{
 			while (1)
@@ -44,6 +47,8 @@ void main(int argc, char **argv)
 			}
 		}
 
+		//pop out of the stack the operators until meet the lower-precedence operator, or same precedence but right associatiation
+		//after that, push the considered operator into stack
 		else if (isOperator(infix[i]))
 		{
 			while (!empty(stack))
@@ -57,6 +62,7 @@ void main(int argc, char **argv)
 			}
 			push(&infix[i], stack);
 		}
+		//meet operands, just use it
 		else if (isOperand(infix[i]))
 		{
 			postfix[j] = infix[i];
@@ -64,6 +70,7 @@ void main(int argc, char **argv)
 		}
 	}
 
+	//finally, pop all the remaining operators in the stack, add to the end of the storing array
 	while (!empty(stack))
 	{
 		temp = (char *)pop(stack);
@@ -73,19 +80,22 @@ void main(int argc, char **argv)
 
 	// for (i = 0; i < strlen(postfix); ++i)
 	// 	printf("%c ", postfix[i]);
-	
+
+//Create a binary tree from postfix input
 	tree = binTree(postfix);
+
+//Use functions with binary tree
 	printf("\nThe tree in preorder is: \n");
 	preOrder(tree, display);
 	printf("\nThe tree in inorder is: \n");
 	inOrder(tree, display);
 	printf("\nThe tree in postorder is: \n");
 	postOrder(tree, display);
-	// printf("\nTotal nodes of tree is: %d\n", countNode(tree));
-	// printf("Total leaves of tree is: %d\n", countLeaves(tree));
-	// printf("The height of the tree is: %d\n", height(tree));
-	// printf("Number of internal nodes: %d\n", countNode(tree) - 1 - countLeaves(tree));
-	// printf("Number of right children: %d\n", nb_right(tree));
+	printf("\nTotal nodes of tree is: %d\n", countNode(tree));
+	printf("Total leaves of tree is: %d\n", countLeaves(tree));
+	printf("The height of the tree is: %d\n", height(tree));
+	printf("Number of internal nodes: %d\n", countNode(tree) - countLeaves(tree));
+	printf("Number of right children: %d\n", nb_right(tree));
 	// p = makeTNode(n);
 	// printf("The depth of the %d-th node is: %d\n", n, depth(tree, p, ));
 	printf("\n");
@@ -111,8 +121,8 @@ int isOperator(char token) {
 //if the operator meet some requirement, they will be pop
 int popOperator(char poped, char consider)
 {
-	if (isOperator(poped) < isOperator(consider) || (poped == '^' && consider == '^') 
-		|| (poped == '+' &&  consider == '+') || (poped == '*' && consider == '*')	)
+	if (isOperator(poped) < isOperator(consider) || (poped == '^' && consider == '^')
+	        || (poped == '+' &&  consider == '+') || (poped == '*' && consider == '*')	)
 		return 1;
 	return 0;
 }
@@ -154,7 +164,7 @@ tree_type binTree(char postfix[])
 			t = makeTNode(&postfix[i]);
 			push(t, stack);
 		}
-		else 
+		else
 		{
 			t = makeTNode(&postfix[i]);
 			t1 = pop(stack);
