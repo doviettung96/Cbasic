@@ -111,7 +111,8 @@ int isOperator(char token) {
 //if the operator meet some requirement, they will be pop
 int popOperator(char poped, char consider)
 {
-	if (isOperator(poped) < isOperator(consider) || (poped == '^' && consider == '^') || (poped == '+' &&  consider == '+') || (poped == '*' && consider == '*'))
+	if (isOperator(poped) < isOperator(consider) || (poped == '^' && consider == '^') 
+		|| (poped == '+' &&  consider == '+') || (poped == '*' && consider == '*')	)
 		return 1;
 	return 0;
 }

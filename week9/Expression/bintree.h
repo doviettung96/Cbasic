@@ -187,15 +187,15 @@ void inOrder(tree_type tree, void (*order)(tree_type))
 	}
 }
 
-// void postOrder(tree_type tree, void (*order)(tree_type))
-// {
-// 	if (tree != NULL)
-// 	{
-// 		postOrder(tree->left, order);
-// 		postOrder(tree->right, order);
-// 		order(tree);
-// 	}
-// }
+void postOrder(tree_type tree, void (*order)(tree_type))
+{
+	if (tree != NULL)
+	{
+		postOrder(tree->left, order);
+		postOrder(tree->right, order);
+		order(tree);
+	}
+}
 
 
 
