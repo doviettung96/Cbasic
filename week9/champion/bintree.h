@@ -28,15 +28,6 @@ int emptyTree(tree_type tree) {
 	return tree == NULL;
 }
 
-void freeTree(tree_type tree) {
-	if (emptyTree(tree))
-		return;
-	freeTree(tree->left);
-	freeTree(tree->right);
-	free(tree);
-	return;
-}
-
 TNode *leftChild(TNode *p) {
 	if (p != NULL)
 		return p->left;
@@ -167,13 +158,13 @@ tree_type addtorightmost(tree_type *tree, void *val)
 	return new;
 }
 
-void preOrder(tree_type tree, void (*order)(tree_type))
+void preOrder(tree_type tree, FILE *fout, void (*order)(tree_type, FILE *))
 {
 	if (tree != NULL)
 	{
-		order(tree);
-		preOrder(tree->left, order);
-		preOrder(tree->right, order);
+		order(tree, fout);
+		preOrder(tree->left, fout, order);
+		preOrder(tree->right, fout, order);
 	}
 }
 
@@ -196,6 +187,20 @@ void postOrder(tree_type tree, void (*order)(tree_type))
 		order(tree);
 	}
 }
+
+// void freeTree(tree_type *tree) {
+// 	if (tree == NULL || *tree == NULL)
+// 		return;
+// 	freeTree(&((*tree)->left));
+// 	freeTree(&((*tree)->right));
+
+// 	if (tree != NULL)
+// 	{
+// 		free((*tree)->info);
+// 		free((*tree));
+// 	}
+// 	(*tree) = NULL;
+// }
 
 
 
