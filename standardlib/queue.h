@@ -28,7 +28,7 @@ void *deQueue(queue_type *q) {
 	{
 		val = q->list->root->element;
 		delNode(q->list->root, q->list);
-		q->position--;	
+		q->position--;
 		return val;
 	}
 	else
@@ -50,9 +50,9 @@ void *deQueue(queue_type *q) {
 
 void removeQueue(queue_type *q)
 {
-	if(q == NULL)
+	if (q == NULL)
 		return;
-	if(q->list == NULL)
+	if (q->list == NULL)
 		return;
 	if (q != NULL)
 		freeDList(q->list);

@@ -37,28 +37,28 @@ void freeTree(tree_type tree) {
 	return;
 }
 
-TNode *search(tree_type tree, void *key){
+TNode *search(tree_type tree, void *key) {
 	int *x, *y;
 	x = (int *)key;
-	if(tree == NULL)
+	if (tree == NULL)
 		return NULL;
-	if(tree->info == key)
+	if (tree->info == key)
 		return tree;
 
 	y = (int *)tree->info;
-	if(*x < *y)
+	if (*x < *y)
 		tree = search(&tree->left, key);
-	else if(*x > *y)
+	else if (*x > *y)
 		tree = search(&tree->right, key);
 }
 
-void insert(tree_type *tree, void *key){
+void insert(tree_type *tree, void *key) {
 	int *x, *y;
-	if(*tree == NULL)
+	if (*tree == NULL)
 		*tree = makeTNode(key);
-	else if(*x < *y)
+	else if (*x < *y)
 		(*tree)->left = insert(&(*tree)->left, key);
-	else if(*x > *y)
+	else if (*x > *y)
 		(*tree)->right = insert(&(*tree)->right, key);
 }
 
