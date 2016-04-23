@@ -20,8 +20,12 @@ stack_type *iniStack(stack_type *stack) {
   return stack;
 }
 
-int empty(stack_type *stack) {
+int Sempty(stack_type *stack) {
   return stack->top == NULL;
+}
+
+SNode *top(stack_type *stack){
+	return stack->top;
 }
 
 SNode *makeSNode(void *val) {
@@ -43,7 +47,7 @@ void push(void *val, stack_type *stack) {
 void *pop(stack_type *stack) {
   SNode *p;
   void *val;
-  if (empty(stack))
+  if (Sempty(stack))
   {
     printf("Stack overflow\n");
     exit(0);
@@ -51,6 +55,13 @@ void *pop(stack_type *stack) {
   val = stack->top->element;
   p = stack->top;
   stack->top = stack->top->link;
+  free(p->element);
   free(p);
   return val;
+}
+
+void freeStack(stack_type *stack){
+	while(!Sempty(stack))
+		pop(stack);
+	free(stack);
 }

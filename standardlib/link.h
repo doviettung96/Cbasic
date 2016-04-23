@@ -2,10 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef phone_inf element_type;
 typedef struct Node Node;
 typedef struct Node {
-  element_type element;
+  void *element;
   Node* next;
 } Node;
 
@@ -31,7 +30,7 @@ slist *iniList(slist *list) {
 
 
 //make Node
-Node *makeNode(element_type val) {
+Node *makeNode(void *val) {
   Node *p;
   p  = (Node *)malloc(sizeof(Node));
   p->next = NULL;
@@ -51,14 +50,14 @@ int listLength(slist *list) {
   return i;
 }
 
-//display a node
-void display(Node *p) {
-  printf("%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
-}
+// //display a node
+// void display(Node *p) {
+//   printf("%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
+// }
 
 // insert Node to end
 
-void insertEnd(element_type val, slist *list) {
+void insertEnd(void *val, slist *list) {
   Node *p;
   p = makeNode(val);
 
@@ -74,24 +73,24 @@ void insertEnd(element_type val, slist *list) {
 }
 
 
-// find Node
-Node *findNode(element_type val, slist *list) {
-  Node *p = list->root;
-  if (list->root == NULL) return NULL;
-  else {
-    while (p != NULL) {
-      if (strcmp(p->element.model, val.model) == 0 && p->element.storage == val.storage &&
-          p->element.screensize == val.screensize && p->element.price == val.price)
-      {
-        list->cur = p;
-        return p;
-      }
-      else p = p->next ;
-    }
-    printf("Not found \n");
-    return NULL;
-  }
-}
+// // find Node
+// Node *findNode(void *val, slist *list) {
+//   Node *p = list->root;
+//   if (list->root == NULL) return NULL;
+//   else {
+//     while (p != NULL) {
+//       if (strcmp(p->element.model, val.model) == 0 && p->element.storage == val.storage &&
+//           p->element.screensize == val.screensize && p->element.price == val.price)
+//       {
+//         list->cur = p;
+//         return p;
+//       }
+//       else p = p->next ;
+//     }
+//     printf("Not found \n");
+//     return NULL;
+//   }
+// }
 
 //locate n-th Node in a list
 Node *locateNode(int n, slist *list) {
@@ -142,13 +141,14 @@ void delNode(Node *p, slist *list) {
       list->last = pre;
     }
   }
+  free(p->element);
   free(p);
 }
 
 
 
 // insert Node before Node p
-void insertBefore(Node *p, element_type val, slist *list) {
+void insertBefore(Node *p, void *val, slist *list) {
   Node *q = makeNode(val);
   list->cur = q;
   if (list->root == NULL) {
@@ -165,7 +165,7 @@ void insertBefore(Node *p, element_type val, slist *list) {
 
 
 // insert Node after Node p
-void insertAfter(Node *p, element_type val, slist *list) {
+void insertAfter(Node *p, void *val, slist *list) {
   Node *q = makeNode(val);
   list->cur = q;
   if (list->root == NULL) {
@@ -174,6 +174,7 @@ void insertAfter(Node *p, element_type val, slist *list) {
   } else {
     if (list->last == p) {
       insertEnd(val, list);
+      free(q->element);
       free(q);
     }  else  {
       q->next = p->next;
@@ -183,7 +184,7 @@ void insertAfter(Node *p, element_type val, slist *list) {
 }
 
 //display a list
-void traverse(slist *list) {
+void traverse(slist *list, void (*display)(Node *)) {
   Node *p;
   p = list->root;
   while ( p != NULL ) {
@@ -197,7 +198,7 @@ void savetoFile(FILE *fptr, slist *list) {
   Node *p;
   p = list->root;
   while ( p != NULL ) {
-    // fwrite(&p->element, sizeof(element_type), 1, fptr);
+    // fwrite(&p->element, sizeof(void *, 1, fptr);
     fprintf(fptr, "%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
     p = p->next;
   }
@@ -266,6 +267,7 @@ void freeList(slist *list) {
   Node *to_free = list->root;
   while (to_free != NULL) {
     list->root = (list->root)->next;
+    free(to_free->element);
     free(to_free); // free node
     to_free = list->root;
   }

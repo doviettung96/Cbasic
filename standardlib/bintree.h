@@ -33,6 +33,7 @@ void freeTree(tree_type tree) {
 		return;
 	freeTree(tree->left);
 	freeTree(tree->right);
+	free(tree->info);
 	free(tree);
 	return;
 }

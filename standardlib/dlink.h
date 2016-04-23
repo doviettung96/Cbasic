@@ -2,10 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef phone_addr element_type;
 typedef struct DNode DNode ;
 typedef struct DNode {
-	element_type element;
+	void * element;
 	DNode *prev;
 	DNode *next;
 } DNode;
@@ -16,7 +15,7 @@ typedef struct dlist$ {
 	DNode *last;
 } dlist;
 
-DNode *makeDNode(element_type val) {
+DNode *makeDNode(void * val) {
 	DNode *p;
 	p = (DNode *)malloc(sizeof(DNode));
 	p->next = NULL;
@@ -49,12 +48,8 @@ int listLength(dlist *list) {
 	return i;
 }
 
-//display a DNode
-void display(DNode *p) {
-	printf("%-30s\t%-15s\t%-30s\n", p->element.name, p->element.tel, p->element.email);
-}
 
-void insertEnd(element_type val, dlist *list) {
+void insertEnd(void * val, dlist *list) {
 	DNode *p;
 	p = makeDNode(val);
 	if (list->root == NULL) {
@@ -71,22 +66,22 @@ void insertEnd(element_type val, dlist *list) {
 	}
 }
 
-//find a DNode with a value
-DNode *findDNode(element_type val, dlist *list) {
-	DNode *p = list->root;
-	if (list->root == NULL)
-		return NULL;
-	while (p != NULL) {
-		if (strcmp(p->element.name, val.name) == 0 && strcmp(p->element.tel, val.tel) == 0 && strcmp(p->element.email, val.email) == 0)
-		{
-			list->cur = p;
-			return p;
-		}
-		p = p->next;
-	}
-	printf("Not found!!\n");
-	return NULL;
-}
+// //find a DNode with a value
+// DNode *findDNode(void * val, dlist *list) {
+// 	DNode *p = list->root;
+// 	if (list->root == NULL)
+// 		return NULL;
+// 	while (p != NULL) {
+// 		if (strcmp(p->element.name, val.name) == 0 && strcmp(p->element.tel, val.tel) == 0 && strcmp(p->element.email, val.email) == 0)
+// 		{
+// 			list->cur = p;
+// 			return p;
+// 		}
+// 		p = p->next;
+// 	}
+// 	printf("Not found!!\n");
+// 	return NULL;
+// }
 
 //locate n-th DNode in a list
 DNode *locateDNode(int n, dlist *list) {
@@ -114,11 +109,13 @@ void delDNode(DNode *p, dlist *list) {
 	if (p == list->root) {
 		list->root = p->next;
 		p->next->prev = NULL; //careful , maybe core dump
+		free(p->element);
 		free(p);
 	}
 	else if (p == list->last) {
 		list->last = p->prev;
 		p->prev->next = NULL;
+		free(p->element);
 		free(p);
 	}
 	else
@@ -126,12 +123,13 @@ void delDNode(DNode *p, dlist *list) {
 		p->prev->next = p->next;
 		p->next->prev = p->prev;
 		list->cur = p->prev;
+		free(p->element);
 		free(p);
 	}
 }
 
 // insert DNode before DNode p
-void insertBefore(DNode *p, element_type val, dlist *list) {
+void insertBefore(DNode *p, void * val, dlist *list) {
 	DNode *q = makeDNode(val);
 	list->cur = q;
 	if (list->root == NULL) {
@@ -148,7 +146,7 @@ void insertBefore(DNode *p, element_type val, dlist *list) {
 }
 
 // insert DNode after DNode p
-void insertAfter(DNode *p, element_type val, dlist *list) {
+void insertAfter(DNode *p, void * val, dlist *list) {
 	DNode *q = makeDNode(val);
 	list->cur = q;
 	if (list->root == NULL) {
@@ -157,6 +155,7 @@ void insertAfter(DNode *p, element_type val, dlist *list) {
 	} else {
 		if (list->last == p) {
 			insertEnd(val, list);
+			free(q->element);
 			free(q);
 		}  else  {
 			q->next = p->next;
@@ -166,8 +165,13 @@ void insertAfter(DNode *p, element_type val, dlist *list) {
 	}
 }
 
+// //display a DNode
+// void display(DNode *p) {
+// 	printf("%-30s\t%-15s\t%-30s\n", p->element.name, p->element.tel, p->element.email);
+// }
+
 //display a list
-void traverse(dlist *list) {
+void traverse(dlist *list, void (*display)(DNode *)) {
 	DNode *p;
 	p = list->root;
 	while ( p != NULL ) {
@@ -177,7 +181,7 @@ void traverse(dlist *list) {
 }
 
 //split a list from startPosition to the end with the length of numSplit
-void splitList(int startPosition, int numSplit, dlist *list, dlist *list2, dlist *list3) {
+void splitDList(int startPosition, int numSplit, dlist *list, dlist *list2, dlist *list3) {
 	DNode *p;
 	int i;
 	int check[numSplit];
@@ -193,34 +197,34 @@ void splitList(int startPosition, int numSplit, dlist *list, dlist *list2, dlist
 	printf("Split list success\n");
 }
 
-//save the content of list to a data file
-void savetoFile(FILE *fptr, dlist *list) {
-	DNode *p;
-	p = list->root;
-	while ( p != NULL ) {
-		// fwrite(&p->element, sizeof(element_type), 1, fptr);
-		fprintf(fptr, "%-30s\t%-15s\t%-15s\n", p->element.name, p->element.tel, p->element.email);
-		list->cur = p;
-		p = p->next;
-	}
-}
+// //save the content of list to a data file
+// void savetoFile(FILE *fptr, dlist *list) {
+// 	DNode *p;
+// 	p = list->root;
+// 	while ( p != NULL ) {
+// 		// fwrite(&p->element, sizeof(void *), 1, fptr);
+// 		fprintf(fptr, "%-30s\t%-15s\t%-15s\n", p->element.name, p->element.tel, p->element.email);
+// 		list->cur = p;
+// 		p = p->next;
+// 	}
+// }
 
-void checkList(dlist *list, char fileName[20]) {
-	FILE *fptr;
-	DNode *p = list->root;
-	if ((fptr = fopen(fileName, "w + t")) == NULL)
-	{
-		printf("Can't open file %s\n", fileName);
-		exit(1);
-	}
-	// while (p != NULL) {
-	//   fprintf(fptr, "%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
-	//   p = p->next;
-	// }
-	savetoFile(fptr, list);
-}
+// void checkDList(dlist *list, char fileName[20]) {
+// 	FILE *fptr;
+// 	DNode *p = list->root;
+// 	if ((fptr = fopen(fileName, "w + t")) == NULL)
+// 	{
+// 		printf("Can't open file %s\n", fileName);
+// 		exit(1);
+// 	}
+// 	// while (p != NULL) {
+// 	//   fprintf(fptr, "%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
+// 	//   p = p->next;
+// 	// }
+// 	savetoFile(fptr, list);
+// }
 
-void reverseList(dlist *list) {
+void reverseDList(dlist *list) {
 	DNode *z, *p;
 	list->last = list->root;
 
@@ -286,12 +290,13 @@ dlist *countsameNum(dlist *list, dlist *list2) {
 	}
 	return list2;
 }
-void freeList(dlist * list) {
+void freeDList(dlist * list) {
 	if (list->root == NULL)
 		return;
 	DNode *to_free = list->root;
 	while (to_free != NULL) {
 		list->root = (list->root)->next;
+		free(to_free->element);
 		free(to_free); // free DNode
 		to_free = list->root;
 	}

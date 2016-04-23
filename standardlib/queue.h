@@ -1,14 +1,12 @@
 #include "dlink.h"
 
-#define MAX 100
-
 typedef struct {
 	dlist *list;
-	element_type position;
+	void *position;
 } queue_type;
 
 int Qempty(queue_type *q) {
-	return q->position == 0;
+	return q->position == NULL;
 }
 
 queue_type *iniQueue(queue_type *q) {
@@ -18,13 +16,13 @@ queue_type *iniQueue(queue_type *q) {
 	return q;
 }
 
-void enQueue(element_type val, queue_type *q) {
+void enQueue(void *val, queue_type *q) {
 	insertEnd(val, q->list);
 	q->position++;
 }
 
-element_type deQueue(queue_type *q) {
-	element_type val;
+void *deQueue(queue_type *q) {
+	void *val;
 	Node *p;
 	if (!Qempty(q))
 	{
@@ -37,18 +35,18 @@ element_type deQueue(queue_type *q) {
 		printf("Empty queue!\n");
 }
 
-void display(Node *p) {
-	printf("%c ", p->element);
-}
+// void display(Node *p) {
+// 	printf("%c ", p->element);
+// }
 
-void traverse(queue_type *q) {
-	Node *p;
-	p = q->list->root;
-	while ( p != NULL ) {
-		display(p);
-		p = p->next;
-	}
-}
+// void traverse(queue_type *q) {
+// 	Node *p;
+// 	p = q->list->root;
+// 	while ( p != NULL ) {
+// 		display(p);
+// 		p = p->next;
+// 	}
+// }
 
 void removeQueue(queue_type *q)
 {
@@ -57,6 +55,6 @@ void removeQueue(queue_type *q)
 	if(q->list == NULL)
 		return;
 	if (q != NULL)
-		freeList(q->list);
+		freeDList(q->list);
 	free(q);
 }
