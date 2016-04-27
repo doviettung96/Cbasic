@@ -39,11 +39,11 @@ void freeTree(tree_type tree) {
 tree_type search(tree_type tree, int key) {
 	if (tree == NULL)
 		return NULL;
-	if (tree->info == key)
+	else if (tree->info == key)
 		return tree;
-	if (key < tree->info)
+	else if (key < tree->info)
 		tree = search(tree->left, key);
-	else if (key > tree->info)
+	else
 		tree = search(tree->right, key);
 }
 
@@ -83,5 +83,38 @@ void postOrder(tree_type tree, void (*order)(tree_type))
 		postOrder(tree->left, order);
 		postOrder(tree->right, order);
 		order(tree);
+	}
+}
+
+tree_type findMin(tree_type tree) {
+	if (tree == NULL)
+		return NULL;
+	else if (tree->left != NULL)
+		return findMin(tree->left);
+	else
+		return tree;
+}
+
+tree_type findMax(tree_type tree) {
+	if (tree == NULL)
+		return NULL;
+	else if (tree->right != NULL)
+		return findMax(tree->right);
+	else
+		return tree;
+}
+
+void reverseTree(tree_type *tree) {
+	tree_type temp;
+	
+	if (*tree != NULL) {
+		temp = (*tree)->left;
+		(*tree)->left = (*tree)->right;
+		(*tree)->right = temp;
+
+		if ((*tree)->left != NULL)
+			reverseTree(&(*tree)->left);
+		if ((*tree)->right != NULL)
+			reverseTree(&(*tree)->right);
 	}
 }
