@@ -196,3 +196,17 @@ void postOrder(tree_type tree, void (*order)(tree_type))
 	}
 }
 
+void reverseTree(tree_type *tree) {
+	tree_type temp;
+	
+	if (*tree != NULL) {
+		temp = (*tree)->left;
+		(*tree)->left = (*tree)->right;
+		(*tree)->right = temp;
+
+		if ((*tree)->left != NULL)
+			reverseTree(&(*tree)->left);
+		if ((*tree)->right != NULL)
+			reverseTree(&(*tree)->right);
+	}
+}
