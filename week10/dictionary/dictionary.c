@@ -1,41 +1,86 @@
 #include "bst.h"
+#include "menu.h"
 
-#define MAX 6
+#define MAX 5
+
 void display(tree_type tree);
-void main(int argc, char **argv) {
-	FILE *f;
+void savetoFile(tree_type tree, FILE *f);
+void saveTraverse(tree_type tree, void (*order)(tree_type, FILE *));
+
+FILE *f;
+
+void main() {
+
 	tree_type tree;
 	makeNullTree(&tree);
-	element_type input[MAX];
-	int i;
+	element_type input;
+	char sections[MAX][40] = {"Insert a word and meaning", "Traverse through the tree", "Search a word", "Save to file and exit"};
+	char word[20];
+	char meaning[128];
+	int choice;
 
-	if((f = fopen(argv[1], "r")) == NULL)
+	if ((f = fopen("output.txt", "w+")) == NULL)
 	{
-		printf("Can't open file %s\n", argv[1]);
+		printf("Can't open file %s\n", "output.txt");
 		exit(1);
 	}
 
-	printf("Type in the words for the dictionary\n");
-	for (i = 0; i < MAX; ++i)
-	{
-		// printf("%d-th word: ", i + 1);
-		fscanf(f, "%s\n", input[i].word);
-		// while (getchar() != '\n');
-		// printf("Meaning: ");
-		fscanf(f, "%[^\n]", input[i].meaning);
-		insert(&tree, input[i]);
-	}
-
-	printf("The dictionary tree in the preorder\n");
-	preOrder(tree, display);
-	printf("The dictionary tree in the inorder\n");
-	inOrder(tree, display);
-	printf("The dictionary tree in the postorder\n");
-	postOrder(tree, display);
-
-	freeTree(tree);
+	do {
+		choice = getMenu(sections, MAX);
+		switch (choice) {
+		case 1:
+			while (getchar() != '\n');
+			printf("Type in the word for the dictionary\n");
+			printf("Word: ");
+			scanf("%[^\n]", input.word);
+			// printf("%s\n", input.word);
+			while (getchar() != '\n');
+			printf("Meaning: ");
+			scanf("%[^\n]", input.meaning);
+			// printf("%s\n", input.meaning);
+			insert(&tree, input);
+			break;
+		case 2:
+			printf("\nThe dictionary tree in the preorder\n");
+			preOrder(tree, display);
+			printf("\nThe dictionary tree in the inorder\n");
+			inOrder(tree, display);
+			printf("\nThe dictionary tree in the postorder\n");
+			postOrder(tree, display);
+			break;
+		case 3:
+			while (getchar() != '\n');
+			printf("\nType in the word you want to find: ");
+			scanf("%[^\n]", word);
+			printf("\nResult: \n");
+			search(tree, word);
+			break;
+		case MAX:
+			saveTraverse(tree, savetoFile);
+			fclose(f);
+			freeTree(tree);
+			break;
+		default:
+			printf("The choice must be from 1 to %d\n", MAX);
+			break;
+		}
+	} while (choice != MAX);
 }
 
 void display(tree_type tree) {
-	printf("%s: %s \n", tree->info.word, tree->info.meaning);
+	printf("%s: %s\n", tree->info.word, tree->info.meaning);
+}
+
+void savetoFile(tree_type tree, FILE *f) {
+	fprintf(f, "%s: %s\n", tree->info.word, tree->info.meaning);
+}
+
+void saveTraverse(tree_type tree, void (*order)(tree_type, FILE *))
+{
+	if (tree != NULL)
+	{
+		order(tree, f);
+		saveTraverse(tree->left, order);
+		saveTraverse(tree->right, order);
+	}
 }

@@ -5,6 +5,7 @@
 typedef struct {
 	char word[20];
 	char meaning[128];
+	// char syn[20]; //words have same meaning
 } element_type;
 
 typedef struct TNode {
@@ -41,32 +42,40 @@ void freeTree(tree_type tree) {
 	return;
 }
 
-void search(tree_type tree, element_type entry) {
+void search(tree_type tree, char *word) {
 	int flag = 0;
 	if (tree == NULL)
+	{
+		printf("Not found!!\n");
 		return;
-	flag = strcmp(tree->info.word, entry.word);
+	}
+	flag = strcmp(tree->info.word, word);
 	if (flag == 0)
-		printf("Found.\n %s: %s\n", entry.word, entry.meaning);
-	else if (flag < 0)
-		search(tree->left, entry);
+		printf("Found.\n %s: %s\n", tree->info.word, tree->info.meaning);
 	else if (flag > 0)
-		search(tree->right, entry);
+		search(tree->left, word);
+	else if (flag < 0)
+		search(tree->right, word);
 }
 
 void insert(tree_type *tree, element_type entry) {
 	int flag = 0;
-	flag = strcmp((*tree)->info.word, entry.word);
 	if (*tree == NULL)
+	{
 		*tree = makeTNode(entry);
+		return;
+	}
+
+	flag = strcmp((*tree)->info.word, entry.word);
 	if (flag == 0)
 	{
 		printf("Duplicated entry. Please type again\n");
-		insert(tree, entry);
+		return;
 	}
-	else if (flag < 0)
+
+	if (flag > 0)
 		insert(&(*tree)->left, entry);
-	else if (flag > 0)
+	else if (flag < 0)
 		insert(&(*tree)->right, entry);
 }
 

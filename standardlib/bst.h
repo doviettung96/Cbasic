@@ -3,7 +3,7 @@
 #include <string.h>
 
 typedef struct TNode {
-	void *info;
+	int info;
 	struct TNode *left;
 	struct TNode *right;
 } TNode;
@@ -14,7 +14,7 @@ void makeNullTree(tree_type *tree) {
 	(*tree) = NULL;
 }
 
-TNode *makeTNode(void *val) {
+TNode *makeTNode(int val) {
 	TNode *p;
 	p = (TNode *)malloc(sizeof(TNode));
 	p->left = NULL;
@@ -32,33 +32,28 @@ void freeTree(tree_type tree) {
 		return;
 	freeTree(tree->left);
 	freeTree(tree->right);
-	free(tree->info);
 	free(tree);
 	return;
 }
 
-TNode *search(tree_type tree, void *key) {
-	int *x, *y;
-	x = (int *)key;
+TNode *search(tree_type tree, int key) {
 	if (tree == NULL)
 		return NULL;
 	if (tree->info == key)
 		return tree;
 
-	y = (int *)tree->info;
-	if (*x < *y)
+	if (key < tree->info)
 		tree = search(&tree->left, key);
-	else if (*x > *y)
+	else if (key > tree->info)
 		tree = search(&tree->right, key);
 }
 
-void insert(tree_type *tree, void *key) {
-	int *x, *y;
+void insert(tree_type *tree, int key) {
 	if (*tree == NULL)
 		*tree = makeTNode(key);
-	else if (*x < *y)
+	else if (key < tree->info)
 		(*tree)->left = insert(&(*tree)->left, key);
-	else if (*x > *y)
+	else if (key > tree->info)
 		(*tree)->right = insert(&(*tree)->right, key);
 }
 
