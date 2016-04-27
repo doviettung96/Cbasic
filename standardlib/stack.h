@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include <math.h>
 
 typedef struct SNode {
 	void *element;
@@ -14,8 +12,12 @@ typedef struct stack_type$ {
 } stack_type;
 
 //initialize a stack
-stack_type *iniStack(stack_type *stack) {
+stack_type *iniStack() {
+	stack_type *stack;
 	stack = (stack_type *)malloc(sizeof(stack_type));
+	if (stack == NULL)
+		return NULL;
+
 	stack->top = NULL;
 	return stack;
 }
@@ -60,7 +62,9 @@ void *pop(stack_type *stack) {
 }
 
 void freeStack(stack_type *stack) {
+	if (stack == NULL)
+		return;
 	while (!Sempty(stack))
-		pop(stack);
+		free(pop(stack));
 	free(stack);
 }
