@@ -28,14 +28,12 @@ int emptyTree(tree_type tree) {
 	return tree == NULL;
 }
 
-void freeTree(tree_type tree) {
-	if (emptyTree(tree))
+void freeTree(tree_type *tree) {
+	if (emptyTree(*tree))
 		return;
-	freeTree(tree->left);
-	freeTree(tree->right);
-	free(tree->info);
-	free(tree);
-	return;
+	freeTree(&(*tree)->left);
+	freeTree(&(*tree)->right);
+	free(*tree);
 }
 
 TNode *leftChild(TNode *p) {

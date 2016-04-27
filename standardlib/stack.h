@@ -55,7 +55,6 @@ void *pop(stack_type *stack) {
 	val = stack->top->element;
 	p = stack->top;
 	stack->top = stack->top->link;
-	free(p->element);
 	free(p);
 	return val;
 }
