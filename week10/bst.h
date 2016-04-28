@@ -27,13 +27,12 @@ int emptyTree(tree_type tree) {
 	return tree == NULL;
 }
 
-void freeTree(tree_type tree) {
-	if (emptyTree(tree))
+void freeTree(tree_type *tree) {
+	if (emptyTree(*tree))
 		return;
-	freeTree(tree->left);
-	freeTree(tree->right);
-	free(tree);
-	return;
+	freeTree(&(*tree)->left);
+	freeTree(&(*tree)->right);
+	free(*tree);
 }
 
 tree_type search(tree_type tree, int key) {
@@ -106,15 +105,15 @@ tree_type findMax(tree_type tree) {
 
 void reverseTree(tree_type *tree) {
 	tree_type temp;
-	
-	if (*tree != NULL) {
-		temp = (*tree)->left;
-		(*tree)->left = (*tree)->right;
-		(*tree)->right = temp;
 
+	if (*tree != NULL) {
 		if ((*tree)->left != NULL)
 			reverseTree(&(*tree)->left);
 		if ((*tree)->right != NULL)
 			reverseTree(&(*tree)->right);
+		
+		temp = (*tree)->left;
+		(*tree)->left = (*tree)->right;
+		(*tree)->right = temp;
 	}
 }

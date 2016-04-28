@@ -18,19 +18,19 @@ void main() {
 	}
 
 	reverseTree(&tree);
-	// printf("\nThe tree in preoder: \n");
-	// preOrder(tree, display);
-	// printf("\nThe tree in inoder: \n");
-	// inOrder(tree, display);
+	printf("\nThe tree in preoder: \n");
+	preOrder(tree, display);
+	printf("\nThe tree in inoder: \n");
+	inOrder(tree, display);
 	printf("\nThe tree in postoder: \n");
 	postOrder(tree, display);
 	printf("\n");
-	// temp = findMin(tree);
-	// printf("The min element: %d\n", temp->info);
-	// temp = findMax(tree);
-	// printf("The max element: %d\n", temp->info);
+	temp = findMin(tree);
+	printf("The min element: %d\n", temp->info);
+	temp = findMax(tree);
+	printf("The max element: %d\n", temp->info);
 
-	freeTree(tree);
+	freeTree(&tree);
 }
 
 void display(tree_type tree) {
