@@ -30,7 +30,7 @@ void main() {
 	temp = findMax(tree);
 	printf("The max element: %d\n", temp->info);
 
-	freeTree(&tree);
+	freeTree(tree);
 }
 
 void display(tree_type tree) {
