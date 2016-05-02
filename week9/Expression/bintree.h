@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef char element_type;
+
 typedef struct TNode {
-	void *info;
+	element_type info;
 	struct TNode *left;
 	struct TNode *right;
 } TNode;
@@ -15,9 +17,15 @@ void makeNullTree(tree_type *tree) {
 	(*tree) = NULL;
 }
 
-TNode *makeTNode(void *val) {
-	TNode *p;
+TNode *makeTNode(element_type val) {
+	TNode *p = NULL;
 	p = (TNode *)malloc(sizeof(TNode));
+	if(p == NULL)
+	{
+		printf("Can't allocate memory!\n");
+		exit(1);
+	}
+	
 	p->left = NULL;
 	p->right = NULL;
 	p->info = val;
@@ -56,28 +64,6 @@ int isLeaf(tree_type p) {
 		if (leftChild(p) == NULL && rightChild(p) == NULL)
 			return 1;
 }
-
-// tree_type constructTree(void *preval, char preLN[], int *index_ptr, int n) {
-// 	int index = *index_ptr;
-// 	char *s;
-// 	if (index == n)
-// 		return NULL;
-// 	TNode *temp;
-// 	s = (char *)preval;
-// 	temp = makeTNode(s + index * 10);
-// 	(*index_ptr)++;
-// 	if (preLN[index] == 'N')
-// 	{
-// 		temp->left = constructTree(preval, preLN, index_ptr, n);
-// 		temp->right = constructTree(preval, preLN, index_ptr, n);
-// 	}
-// 	return temp;
-// }
-
-// tree_type buildTree(void *preval, char preLN[], int n) {
-// 	int index = 0;
-// 	return constructTree(preval, preLN, &index, n);
-// }
 
 int countNode(tree_type tree) {
 	if (emptyTree(tree))
@@ -122,7 +108,7 @@ int nb_right(tree_type tree) {
 	}
 }
 
-tree_type createFrom2(void *val, tree_type left, tree_type right)
+tree_type createFrom2(element_type val, tree_type left, tree_type right)
 {
 	TNode *new;
 	new = makeTNode(val);
@@ -131,7 +117,7 @@ tree_type createFrom2(void *val, tree_type left, tree_type right)
 	return new;
 }
 
-tree_type addtoLeftmost(tree_type *tree, void *val)
+tree_type addtoLeftmost(tree_type *tree, element_type val)
 {
 	TNode *new;
 	new = makeTNode(val);
@@ -149,7 +135,7 @@ tree_type addtoLeftmost(tree_type *tree, void *val)
 	return new;
 }
 
-tree_type addtorightmost(tree_type *tree, void *val)
+tree_type addtorightmost(tree_type *tree, element_type val)
 {
 	TNode *new;
 	new = makeTNode(val);
@@ -197,5 +183,39 @@ void postOrder(tree_type tree, void (*order)(tree_type))
 	}
 }
 
+void reverseTree(tree_type *tree) {
+	tree_type temp;
 
+	if (*tree != NULL) {
+		if ((*tree)->left != NULL)
+			reverseTree(&(*tree)->left);
+		if ((*tree)->right != NULL)
+			reverseTree(&(*tree)->right);
+		
+		temp = (*tree)->left;
+		(*tree)->left = (*tree)->right;
+		(*tree)->right = temp;
+	}
+}
 
+// tree_type constructTree(element_type preval, element_type preLN[], int *index_ptr, int n) {
+// 	int index = *index_ptr;
+// 	element_type *s;
+// 	if (index == n)
+// 		return NULL;
+// 	TNode *temp;
+// 	s = (element_type *)preval;
+// 	temp = makeTNode(s + index * 10);
+// 	(*index_ptr)++;
+// 	if (preLN[index] == 'N')
+// 	{
+// 		temp->left = constructTree(preval, preLN, index_ptr, n);
+// 		temp->right = constructTree(preval, preLN, index_ptr, n);
+// 	}
+// 	return temp;
+// }
+
+// tree_type buildTree(element_type preval, element_type preLN[], int n) {
+// 	int index = 0;
+// 	return constructTree(preval, preLN, &index, n);
+// }
