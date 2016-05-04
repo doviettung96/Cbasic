@@ -24,7 +24,8 @@ DNode *makeDNode(void * val) {
 	return p;
 }
 
-dlist *iniList(dlist *list) {
+dlist *iniList() {
+	dlist *list;
 	list = (dlist *)malloc(sizeof(dlist));
 	if (list == NULL) {
 		fprintf(stderr, "ERROR : Allocated memory failed !!\n");

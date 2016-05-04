@@ -9,9 +9,13 @@ int Qempty(queue_type *q) {
 	return q->position == NULL;
 }
 
-queue_type *iniQueue(queue_type *q) {
+queue_type *iniQueue() {
+	queue_type *q;
 	q = (queue_type *)malloc(sizeof(queue_type));
-	q->list = iniList(q->list);
+	if(q == NULL)
+		return NULL;
+	
+	q->list = iniList();
 	q->position = 0;
 	return q;
 }
