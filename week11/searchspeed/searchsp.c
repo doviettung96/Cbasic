@@ -1,8 +1,8 @@
-#include "bst.h"
+#include "avl.h"
 #include "time.h"
 #include "menu.h"
 
-#define MAX 10
+#define MAX 1000000
 #define MAXSC 5
 
 void display(tree_type tree);
