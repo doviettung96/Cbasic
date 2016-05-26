@@ -8,8 +8,11 @@ void display(tree_type tree);
 void main() {
 	int choice;
 	char sections[MAXSC][40] = {"Read from A.txt", "Read from B.txt", "Search", "Ultility", "Report", "Exit"};
-	FILE *f;
+	FILE *f1, *f2;
 	tree_type tree;
+	element_type pattern[4];
+	int i = 0;
+	tree_type temp;
 	makeNullTree(&tree);
 
 	do {
@@ -17,11 +20,46 @@ void main() {
 		switch (choice)
 		{
 		case 1:
-			readData(f, "A.txt", &tree);
+			readData(f1, "A.txt", &tree);
+			inOrder(tree, display);
+			// preOrder(tree, display);
+			// postOrder(tree, display);
+			break;
+		case 2:
+			if ((f2 = fopen("B.txt", "r")) == NULL)
+			{
+				printf("Can't open file %s\n", "B.txt");
+				exit(1);
+			}
+			for (i = 0; i < 4; ++i)
+			{
+				fscanf(f2, "%d\t%s\n", &pattern[i].key, pattern[i].name);
+				if (strcmp(pattern[i].name, "-1") == 0)
+				{
+					printf("Type in the name of %d: ", pattern[i].key);
+					scanf("%s", pattern[i].name);
+				}
+			}
+
+			printf("Result: \n");
+			for (i = 0; i < 4; ++i)
+				printf("%d: %s\n", pattern[i].key, pattern[i].name);
+
+			break;
+		case 3:
+			for (i = 0; i < 4; ++i)
+			{
+				temp = search(tree, pattern[i].key);
+				if(temp != NULL)
+				{
+					printf("Duplicate entry: ");
+					display(temp);
+					delete(&tree, pattern[i].key);
+				}
+			}
+			printf("New tree\n");
 			inOrder(tree, display);
 			break;
-		case 2: break;
-		case 3: break;
 		case 4: break;
 		case 5: break;
 		case MAXSC:
