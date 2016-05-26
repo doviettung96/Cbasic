@@ -54,6 +54,8 @@ void preOrder(tree_type tree, void (*order)(tree_type));
 
 void inOrder(tree_type tree, void (*order)(tree_type));
 
+void reinOrder(tree_type tree, void (*order)(tree_type));
+
 void postOrder(tree_type tree, void (*order)(tree_type));
 
 void reverseTree(tree_type *tree);

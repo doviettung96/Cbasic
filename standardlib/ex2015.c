@@ -50,7 +50,7 @@ void main() {
 			for (i = 0; i < 4; ++i)
 			{
 				temp = search(tree, pattern[i].key);
-				if(temp != NULL)
+				if (temp != NULL)
 				{
 					printf("Duplicate entry: ");
 					display(temp);
@@ -60,7 +60,11 @@ void main() {
 			printf("New tree\n");
 			inOrder(tree, display);
 			break;
-		case 4: break;
+		case 4:
+			for(i = 0; i < 4; ++i)
+				insert(&tree, pattern[i]);
+			reinOrder(tree, display);
+			break;
 		case 5: break;
 		case MAXSC:
 			freeTree(tree);
