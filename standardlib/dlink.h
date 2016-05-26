@@ -166,11 +166,6 @@ void insertAfter(DNode *p, void * val, dlist *list) {
 	}
 }
 
-// //display a DNode
-// void display(DNode *p) {
-// 	printf("%-30s\t%-15s\t%-30s\n", p->element.name, p->element.tel, p->element.email);
-// }
-
 //display a list
 void traverse(dlist *list, void (*display)(DNode *)) {
 	DNode *p;

@@ -2,9 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct {
+	char name[30];
+	float mark;
+} element_type;
+
 typedef struct Node Node;
 typedef struct Node {
-	void *element;
+	element_type element;
 	Node* next;
 } Node;
 
@@ -16,7 +21,8 @@ typedef struct slist$ {
 } slist;
 
 //initialize a list
-slist *iniList(slist *list) {
+slist *iniList() {
+	slist *list;
 	list = (slist *)malloc(sizeof(slist));
 	if (list == NULL) {
 		fprintf(stderr, "ERROR : Allocated memory failed !!\n");
@@ -30,7 +36,7 @@ slist *iniList(slist *list) {
 
 
 //make Node
-Node *makeNode(void *val) {
+Node *makeNode(element_type val) {
 	Node *p;
 	p  = (Node *)malloc(sizeof(Node));
 	p->next = NULL;
@@ -50,14 +56,7 @@ int listLength(slist *list) {
 	return i;
 }
 
-// //display a node
-// void display(Node *p) {
-//   printf("%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
-// }
-
-// insert Node to end
-
-void insertEnd(void *val, slist *list) {
+void insertEnd(element_type val, slist *list) {
 	Node *p;
 	p = makeNode(val);
 
@@ -74,7 +73,7 @@ void insertEnd(void *val, slist *list) {
 
 
 // // find Node
-// Node *findNode(void *val, slist *list) {
+// Node *findNode(element_type val, slist *list) {
 //   Node *p = list->root;
 //   if (list->root == NULL) return NULL;
 //   else {
@@ -141,14 +140,14 @@ void delNode(Node *p, slist *list) {
 			list->last = pre;
 		}
 	}
-	free(p->element);
+	// free(p->element);
 	free(p);
 }
 
 
 
 // insert Node before Node p
-void insertBefore(Node *p, void *val, slist *list) {
+void insertBefore(Node *p, element_type val, slist *list) {
 	Node *q = makeNode(val);
 	list->cur = q;
 	if (list->root == NULL) {
@@ -165,7 +164,7 @@ void insertBefore(Node *p, void *val, slist *list) {
 
 
 // insert Node after Node p
-void insertAfter(Node *p, void *val, slist *list) {
+void insertAfter(Node *p, element_type val, slist *list) {
 	Node *q = makeNode(val);
 	list->cur = q;
 	if (list->root == NULL) {
@@ -174,7 +173,7 @@ void insertAfter(Node *p, void *val, slist *list) {
 	} else {
 		if (list->last == p) {
 			insertEnd(val, list);
-			free(q->element);
+			// free(q->element);
 			free(q);
 		}  else  {
 			q->next = p->next;
@@ -184,24 +183,30 @@ void insertAfter(Node *p, void *val, slist *list) {
 }
 
 //display a list
-void traverse(slist *list, void (*display)(Node *)) {
+void traverse(slist *list, void (*function)(Node *)) {
 	Node *p;
 	p = list->root;
 	while ( p != NULL ) {
-		display(p);
+		function(p);
 		p = p->next;
 	}
 }
 
 //save the content of list to a data file
-void savetoFile(FILE *fptr, slist *list) {
+void savetoFile(slist *list, FILE *f, char fileName[]) {
 	Node *p;
 	p = list->root;
+	if ((f = fopen(fileName, "w")) == NULL)
+	{
+		printf("Can't open file %s\n", fileName);
+		exit(1);
+	}
+
 	while ( p != NULL ) {
-		// fwrite(&p->element, sizeof(void *, 1, fptr);
-		fprintf(fptr, "%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
+		fprintf(f, "%s\n%f\n", p->element.name, p->element.mark);
 		p = p->next;
 	}
+	fclose(f);
 }
 
 //split a list from startPosition to the end with the length of numSplit
@@ -221,20 +226,43 @@ void splitList(int startPosition, int numSplit, slist *list, slist *list2, slist
 	printf("Split list success\n");
 }
 
-void checkList(slist *list, char fileName[20]) {
-	FILE *fptr;
-	Node *p = list->root;
-	if ((fptr = fopen(fileName, "w + t")) == NULL)
-	{
-		printf("Can't open file %s\n", fileName);
-		exit(1);
+//add node to the end of list
+void insertNode(Node *p, slist *list) {
+	if (list->root == NULL) {
+		list->root = p;
+		list->cur = p;
+		list->last = p;
+	} else {
+		(list->last)->next = p;
+		list->last = p;
+		list->cur = p;
 	}
-	// while (p != NULL) {
-	//   fprintf(fptr, "%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
-	//   p = p->next;
-	// }
-	savetoFile(fptr, list);
 }
+
+//display a list
+void saveList(slist *list, slist *result, void (*function)(Node *, slist *)) {
+	Node *p;
+	p = list->root;
+	while ( p != NULL ) {
+		function(p, result);
+		p = p->next;
+	}
+}
+
+// void checkList(slist *list, char fileName[20]) {
+// 	FILE *fptr;
+// 	Node *p = list->root;
+// 	if ((fptr = fopen(fileName, "w + t")) == NULL)
+// 	{
+// 		printf("Can't open file %s\n", fileName);
+// 		exit(1);
+// 	}
+// 	// while (p != NULL) {
+// 	//   fprintf(fptr, "%-30s\t%-3d\t%-2.1f\t%-9d\n", p->element.model, p->element.storage, p->element.screensize, p->element.price);
+// 	//   p = p->next;
+// 	// }
+// 	savetoFile(fptr, list);
+// }
 
 void list_reverse(slist *list) {
 	Node *z, *p;
@@ -267,8 +295,9 @@ void freeList(slist *list) {
 	Node *to_free = list->root;
 	while (to_free != NULL) {
 		list->root = (list->root)->next;
-		free(to_free->element);
+		// free(to_free->element);
 		free(to_free); // free node
 		to_free = list->root;
 	}
+	free(list);
 }
