@@ -1,18 +1,5 @@
 #include "dlink.h"
 
-typedef struct DNode DNode ;
-typedef struct DNode {
-	void * element;
-	DNode *prev;
-	DNode *next;
-} DNode;
-
-typedef struct dlist$ {
-	DNode *root;
-	DNode *cur;
-	DNode *last;
-} dlist;
-
 DNode *makeDNode(void * val) {
 	DNode *p;
 	p = (DNode *)malloc(sizeof(DNode));
@@ -174,6 +161,23 @@ void traverse(dlist *list, void (*display)(DNode *)) {
 	}
 }
 
+// //save the content of list to a data file
+// void savetoFile(dlist *list, FILE *f, char fileName[]) {
+// 	Node *p;
+// 	p = list->root;
+// 	if ((f = fopen(fileName, "w")) == NULL)
+// 	{
+// 		printf("Can't open file %s\n", fileName);
+// 		exit(1);
+// 	}
+
+// 	while ( p != NULL ) {
+// 		fprintf(f, "%s\n%f\n", p->element.name, p->element.mark);
+// 		p = p->next;
+// 	}
+// 	fclose(f);
+// }
+
 //split a list from startPosition to the end with the length of numSplit
 void splitDList(int startPosition, int numSplit, dlist *list, dlist *list2, dlist *list3) {
 	DNode *p;
@@ -191,17 +195,6 @@ void splitDList(int startPosition, int numSplit, dlist *list, dlist *list2, dlis
 	printf("Split list success\n");
 }
 
-// //save the content of list to a data file
-// void savetoFile(FILE *fptr, dlist *list) {
-// 	DNode *p;
-// 	p = list->root;
-// 	while ( p != NULL ) {
-// 		// fwrite(&p->element, sizeof(void *), 1, fptr);
-// 		fprintf(fptr, "%-30s\t%-15s\t%-15s\n", p->element.name, p->element.tel, p->element.email);
-// 		list->cur = p;
-// 		p = p->next;
-// 	}
-// }
 
 // void checkDList(dlist *list, char fileName[20]) {
 // 	FILE *fptr;
@@ -294,5 +287,6 @@ void freeDList(dlist * list) {
 		free(to_free); // free DNode
 		to_free = list->root;
 	}
+	free(list);
 }
 

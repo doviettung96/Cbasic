@@ -37,7 +37,7 @@ void traverse(dlist *list, void (*display)(DNode *));
 //split a list from startPosition to the end with the length of numSplit
 void splitDList(int startPosition, int numSplit, dlist *list, dlist *list2, dlist *list3);
 // //save the content of list to a data file
-// void savetoFile(FILE *fptr, dlist *list);
+void savetoFile(dlist *list, FILE *f, char fileName[]);
 // void checkDList(dlist *list, char fileName[20]);
 void reverseDList(dlist *list);
 //count the identical phone number elements and extract them

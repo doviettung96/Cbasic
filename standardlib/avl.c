@@ -86,42 +86,42 @@ tree_type findMax(tree_type tree) {
 		return tree;
 }
 
-tree_type search(tree_type tree, element_type key) {
+tree_type search(tree_type tree, key_type key) {
 	if (tree == NULL)
 		return NULL;
-	else if (tree->info == key)
+	else if (tree->info.key == key)
 		return tree;
-	else if (key < tree->info)
+	else if (key < tree->info.key)
 		tree = search(tree->left, key);
 	else
 		tree = search(tree->right, key);
 }
 
 
-void insert(tree_type *tree, element_type key) {
+void insert(tree_type *tree, element_type entry) {
 	if (*tree == NULL)
-		*tree = makeTNode(key);
-	else if ((*tree)->info > key)
-		insert(&(*tree)->left, key);
-	else if ((*tree)->info < key)
-		insert(&(*tree)->right, key);
+		*tree = makeTNode(entry);
+	else if ((*tree)->info.key > entry.key)
+		insert(&(*tree)->left, entry);
+	else if ((*tree)->info.key < entry.key)
+		insert(&(*tree)->right, entry);
 
 	(*tree)->height = max(height((*tree)->left), height((*tree)->right)) + 1;
 
 	int balance = getBalance(*tree);
 
 	if (balance > 1)
-		if (key < (*tree)->left->info) //left-left
+		if (entry.key < (*tree)->left->info.key) //left-left
 			rotateRight(tree);
-		else if (key > (*tree)->left->info) //left-right
+		else if (entry.key > (*tree)->left->info.key) //left-right
 		{
 			rotateLeft(&(*tree)->left);
 			rotateRight(tree);
 		}
 	if (balance < -1)
-		if (key > (*tree)->right->info) //right-right
+		if (entry.key > (*tree)->right->info.key) //right-right
 			rotateLeft(tree);
-		else if (key < (*tree)->right->info)//right-left
+		else if (entry.key < (*tree)->right->info.key)//right-left
 		{
 			rotateRight(&(*tree)->right);
 			rotateLeft(tree);
@@ -138,13 +138,13 @@ element_type deleteMin (tree_type *tree ) {
 	else return deleteMin(&(*tree)->left);
 }
 
-void delete(tree_type *tree, element_type key)
+void delete(tree_type *tree, key_type key)
 {
 	if (*tree != NULL)
 	{
-		if (key < (*tree)->info)
+		if (key < (*tree)->info.key)
 			delete(&(*tree)->left, key);
-		else if (key > (*tree)->info)
+		else if (key > (*tree)->info.key)
 			delete(&(*tree)->right, key);
 		else if ((*tree)->left == NULL && (*tree)->right == NULL)
 			*tree = NULL;

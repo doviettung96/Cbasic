@@ -5,8 +5,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef int key_type;
+typedef struct{
+	key_type key;
+} element_type;
+
 typedef struct TNode {
-	int info;
+	element_type info;
 	struct TNode *left;
 	struct TNode *right;
 } TNode;
@@ -14,11 +19,13 @@ typedef struct TNode {
 typedef TNode *tree_type;
 
 void makeNullTree(tree_type *tree);
-TNode *makeTNode(int val);
+TNode *makeTNode(element_type val);
 int emptyTree(tree_type tree);
 void freeTree(tree_type tree);
-TNode *search(tree_type tree, int key);
-void insert(tree_type *tree, int key);
+tree_type search(tree_type tree, key_type key);
+void insert(tree_type *tree, element_type entry);
+element_type deleteMin (tree_type *tree);
+void delete(tree_type *tree, key_type key);
 void preOrder(tree_type tree, void (*order)(tree_type));
 void inOrder(tree_type tree, void (*order)(tree_type));
 void postOrder(tree_type tree, void (*order)(tree_type));

@@ -219,7 +219,6 @@ void insertNode(Node *p, slist *list) {
 	}
 }
 
-//display a list
 void saveList(slist *list, slist *result, void (*function)(Node *, slist *)) {
 	Node *p;
 	p = list->root;

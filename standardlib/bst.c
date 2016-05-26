@@ -26,25 +26,53 @@ void freeTree(tree_type tree) {
 	return;
 }
 
-TNode *search(tree_type tree, int key) {
+tree_type search(tree_type tree, key_type key) {
 	if (tree == NULL)
 		return NULL;
-	if (tree->info == key)
+	else if (tree->info.key == key)
 		return tree;
-
-	if (key < tree->info)
-		tree = search(&tree->left, key);
-	else if (key > tree->info)
-		tree = search(&tree->right, key);
+	else if (key < tree->info.key)
+		tree = search(tree->left, key);
+	else
+		tree = search(tree->right, key);
 }
 
-void insert(tree_type *tree, int key) {
+void insert(tree_type *tree, element_type entry) {
 	if (*tree == NULL)
-		*tree = makeTNode(key);
-	else if (key < tree->info)
-		(*tree)->left = insert(&(*tree)->left, key);
-	else if (key > tree->info)
-		(*tree)->right = insert(&(*tree)->right, key);
+		*tree = makeTNode(entry);
+	else if (entry.key < tree->info.key)
+		(*tree)->left = insert(&(*tree)->left, entry);
+	else if (entry.key > tree->info.key)
+		(*tree)->right = insert(&(*tree)->right, entry);
+}
+
+element_type deleteMin (tree_type *tree) {
+	element_type key;
+	if ((*tree)->left == NULL) {
+		key = (*tree)->info;
+		(*tree) = (*tree)->right;
+		return key;
+	}
+	else return deleteMin(&(*tree)->left);
+}
+
+void delete(tree_type *tree, key_type key)
+{
+	if (*tree != NULL)
+	{
+		if (key < (*tree)->info.key)
+			delete(&(*tree)->left, key);
+		else if (key > (*tree)->info.key)
+			delete(&(*tree)->right, key);
+		else if ((*tree)->left == NULL && (*tree)->right == NULL)
+			*tree = NULL;
+		else if ((*tree)->left == NULL)
+			*tree = (*tree)->right;
+		else if ((*tree)->right == NULL)
+			*tree = (*tree)->left;
+		else
+			(*tree)->info = deleteMin(&(*tree)->right);
+	}
 }
 
 void preOrder(tree_type tree, void (*order)(tree_type))
