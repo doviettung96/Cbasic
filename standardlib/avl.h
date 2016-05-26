@@ -8,6 +8,7 @@
 typedef int key_type;
 typedef struct{
 	key_type key;
+	char name[30];
 } element_type;
 
 typedef struct TNode {

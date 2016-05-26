@@ -1,15 +1,12 @@
 #ifndef _SORT_H_
 #define _SORT_H_
 
+#include "link.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-#define N 1000
 
-typedef struct {
-	char name[30];
-	float mark;
-} element_type;
+#define N 1000
 
 void swap(element_type *a, element_type *b);
 void insertionSort(element_type a[], int size);
