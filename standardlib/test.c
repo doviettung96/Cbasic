@@ -6,7 +6,7 @@
 void readData(FILE *f, char fileName[], slist *list);
 void search(slist *list, float key);
 void best(slist *list, slist *excellent);
-void display(Node *p);
+void displayList(Node *p);
 
 void main() {
 	FILE *f1, *f2, *fout;
@@ -36,7 +36,7 @@ void main() {
 			printf("Excellent students: \n");
 			best(list1, excellent);
 			best(list2, excellent);
-			traverse(excellent, display);
+			traverse(excellent, displayList);
 			break;
 		case 4:
 			savetoFile(excellent, fout, "output.txt");
@@ -47,7 +47,7 @@ void main() {
 			merge = iniList();
 			saveList(list1, merge, insertNode);
 			saveList(list2, merge, insertNode);
-			traverse(merge, display);
+			traverse(merge, displayList);
 			freeList(merge);
 			break;
 		case MAXSC:
@@ -137,8 +137,8 @@ void best(slist *list, slist *excellent)
 		printf("Not found any sufficient result\n");
 }
 
-//display a node
-void display(Node *p) {
+//displayList a node
+void displayList(Node *p) {
 	printf("%s: %f- %p\n", p->element.name, p->element.mark, p);
 }
 
