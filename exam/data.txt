@@ -1,0 +1,4 @@
+car	xe
+i	toi
+you	ban
+your	cua_ban
