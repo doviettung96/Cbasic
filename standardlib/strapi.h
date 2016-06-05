@@ -1,6 +1,8 @@
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <ctype.h>
 
 /*------------------------- Remove Space ---------------------------*/
 char *trimString(char *str) {
@@ -25,16 +27,16 @@ char *trimString(char *str) {
 /*------------------------------------------------------------------*/
 
 
-/*------------- Check if the letter is valid -----------------*/
-int validStr(char *str, char *t) {
-	int n = strlen(str);
-	int i;
-	for (i = 0; i < n; ++i) {
-		if ( strcmp(t, "digit") && isalpha(str[i]) ) return 0;
-		if ( strcmp(t, "alpha") && isdigit(str[i]) ) return 0;
-	}
-	return 1;
-}
+// /*------------- Check if the letter is valid -----------------*/
+// int validStr(char *str, char *t) {
+// 	int n = strlen(str);
+// 	int i;
+// 	for (i = 0; i < n; ++i) {
+// 		if ( strcmp(t, "digit") && isalpha(str[i]) ) return 0;
+// 		if ( strcmp(t, "alpha") && isdigit(str[i]) ) return 0;
+// 	}
+// 	return 1;
+// }
 /*------------------------------------------------------------------*/
 
 /*---------------------------- Reform ------------------------------*/
