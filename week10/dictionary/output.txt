@@ -1,4 +1,1 @@
-apple: qua tao
-good: tot
-kind: tot
-hate: ghet
+cat: meo

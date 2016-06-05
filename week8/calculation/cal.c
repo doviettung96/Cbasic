@@ -1,47 +1,46 @@
-#include "stacklib.h"
+#include "stack.h"
+#include "ctype.h"
 
-
-element_type cal(char token, element_type op1, element_type op2);
+int cal(char token, int op1, int op2);
 
 void main(int argc, char **argv) {
 	int i = 0;
 	stack_type *s;
-	element_type result;
-	element_type op1, op2;
+	int result;
+	int *op1, *op2;
 	char token;
-	element_type input;
+	int input;
 
-	s = iniStack(s);
+	s = iniStack();
 
 	for (i = 1; argv[i] != NULL; ++i)
 	{
 		if (isalnum(argv[i][0]))
 		{
 			input = atoi(argv[i]);
-			push(input, s);
+			push(&input, s);
 		}
 		else
 		{
-			op2 = pop(s);
-			op1 = pop(s);
-			printf("%d %d\n", op1, op2);
+			op2 = (int*)pop(s);
+			op1 = (int*)pop(s);
+			printf("%d %d\n", *op1, *op2);
 			token = argv[i][0];
-			result = cal(token, op1 , op2);
-			push(result, s);
+			result = cal(token, *op1 , *op2);
+			push(&result, s);
 		}
 	}
 
 	printf("Result = ");
-
-	printf("%d", pop(s));
-	printf("\n");
+	printf("%d\n", result);
+	freeStack(s);
 }
 
 
 
 //token depends on the notNumber() funtion
-element_type cal(char token, element_type op1, element_type op2) {
-	element_type result;
+int cal(char token, int op1, int op2) {
+	int result;
 	switch (token) {
 	case '+': result = op1 + op2; break;
 	case '-': result = op1 - op2; break;

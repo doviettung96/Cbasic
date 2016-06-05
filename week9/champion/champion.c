@@ -39,32 +39,30 @@ void main(int argc, char **argv) {
 }
 
 void display(tree_type tree) {
-	printf("%s\n", (char*)tree->info);
+	printf("%s\n", tree->info.s);
 }
 
 void savetoFile(tree_type tree, FILE *fout) {
-	fprintf(fout, "%s\n", (char *)tree->info);
+	fprintf(fout, "%s\n", tree->info.s);
 }
 
 void showArray(tree_type *Tarray) {
 	int i;
 	for (i = 0; i < MAX; i++) {
-		printf("\t%s \n", (char *)Tarray[i]->info);
+		printf("\t%s \n", Tarray[i]->info.s);
 	}
 }
 
 tree_type *getData(FILE *fin) {
 	tree_type *Tarray = (tree_type *)malloc(sizeof(tree_type));
 	int i = 0;
-	char *s;
-	while (i < MAX)
+	element_type val;
+	while (!feof(fin))
 	{
-		s = (char *)malloc(sizeof(char));
-		fscanf(fin, "%s\n", s);
-		Tarray[i] = makeTNode(s);
+		fscanf(fin, "%s\n", val.s);
+		Tarray[i] = makeTNode(val);
 		++i;
 	}
-	free(s);
 	return Tarray;
 }
 
@@ -74,7 +72,7 @@ tree_type match(tree_type *Tarray) {
 	tree_type root;
 	int i;
 	int index;
-	char *winner;
+	element_type winner;
 	makeNullTree(&root);
 
 	for (i = 0; i < MAX; ++i)
@@ -87,7 +85,7 @@ tree_type match(tree_type *Tarray) {
 		while (i < n * 2)
 		{
 			int rd = rand() % 2;
-			winner = (char*)temp[i + rd]->info;
+			winner = temp[i + rd]->info;
 			root = createFrom2(winner, temp[i], temp[i + 1]);
 			temp[index] = root;
 			i += 2;

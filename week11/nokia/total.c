@@ -4,9 +4,6 @@
 
 #define MAX 6
 
-// #define NUMDATA 138
-int result;
-
 void display(tree_type tree);
 
 int main(int argc, char **argv) {
@@ -37,8 +34,8 @@ int main(int argc, char **argv) {
 			numData = ftell(fin) / sizeof(element_type);
 			rewind(fin);
 			result = importfromDB(fin, numData);
-			for (i = 0; i < result; ++i)
-				insert(&tree, parr[i]);
+			// for (i = 0; i < result; ++i)
+			insert(&tree, parr[i]);
 			fclose(fin);
 			break;
 		case 2:

@@ -2,8 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct{
+	char s[20];
+}element_type;
+
 typedef struct TNode {
-	void *info;
+	element_type info;
 	struct TNode *left;
 	struct TNode *right;
 } TNode;
@@ -15,7 +19,7 @@ void makeNullTree(tree_type *tree) {
 	(*tree) = NULL;
 }
 
-TNode *makeTNode(void *val) {
+TNode *makeTNode(element_type val) {
 	TNode *p;
 	p = (TNode *)malloc(sizeof(TNode));
 	p->left = NULL;
@@ -26,6 +30,14 @@ TNode *makeTNode(void *val) {
 
 int emptyTree(tree_type tree) {
 	return tree == NULL;
+}
+
+void freeTree(tree_type tree) {
+	if (emptyTree(tree))
+		return;
+	freeTree(tree->left);
+	freeTree(tree->right);
+	free(tree);
 }
 
 TNode *leftChild(TNode *p) {
@@ -47,28 +59,6 @@ int isLeaf(tree_type p) {
 		if (leftChild(p) == NULL && rightChild(p) == NULL)
 			return 1;
 }
-
-// tree_type constructTree(void *preval, char preLN[], int *index_ptr, int n) {
-// 	int index = *index_ptr;
-// 	char *s;
-// 	if (index == n)
-// 		return NULL;
-// 	TNode *temp;
-// 	s = (char *)preval;
-// 	temp = makeTNode(s + index * 10);
-// 	(*index_ptr)++;
-// 	if (preLN[index] == 'N')
-// 	{
-// 		temp->left = constructTree(preval, preLN, index_ptr, n);
-// 		temp->right = constructTree(preval, preLN, index_ptr, n);
-// 	}
-// 	return temp;
-// }
-
-// tree_type buildTree(void *preval, char preLN[], int n) {
-// 	int index = 0;
-// 	return constructTree(preval, preLN, &index, n);
-// }
 
 int countNode(tree_type tree) {
 	if (emptyTree(tree))
@@ -113,7 +103,7 @@ int nb_right(tree_type tree) {
 	}
 }
 
-tree_type createFrom2(void *val, tree_type left, tree_type right)
+tree_type createFrom2(element_type val, tree_type left, tree_type right)
 {
 	TNode *new;
 	new = makeTNode(val);
@@ -122,7 +112,7 @@ tree_type createFrom2(void *val, tree_type left, tree_type right)
 	return new;
 }
 
-tree_type addtoLeftmost(tree_type *tree, void *val)
+tree_type addtoLeftmost(tree_type *tree, element_type val)
 {
 	TNode *new;
 	new = makeTNode(val);
@@ -140,7 +130,7 @@ tree_type addtoLeftmost(tree_type *tree, void *val)
 	return new;
 }
 
-tree_type addtorightmost(tree_type *tree, void *val)
+tree_type addtorightmost(tree_type *tree, element_type val)
 {
 	TNode *new;
 	new = makeTNode(val);
@@ -158,13 +148,13 @@ tree_type addtorightmost(tree_type *tree, void *val)
 	return new;
 }
 
-void preOrder(tree_type tree, FILE *fout, void (*order)(tree_type, FILE *))
+void preOrder(tree_type tree, void (*order)(tree_type))
 {
 	if (tree != NULL)
 	{
-		order(tree, fout);
-		preOrder(tree->left, fout, order);
-		preOrder(tree->right, fout, order);
+		order(tree);
+		preOrder(tree->left, order);
+		preOrder(tree->right, order);
 	}
 }
 
@@ -188,19 +178,17 @@ void postOrder(tree_type tree, void (*order)(tree_type))
 	}
 }
 
-// void freeTree(tree_type *tree) {
-// 	if (tree == NULL || *tree == NULL)
-// 		return;
-// 	freeTree(&((*tree)->left));
-// 	freeTree(&((*tree)->right));
+void reverseTree(tree_type *tree) {
+	tree_type temp;
+	
+	if (*tree != NULL) {
+		temp = (*tree)->left;
+		(*tree)->left = (*tree)->right;
+		(*tree)->right = temp;
 
-// 	if (tree != NULL)
-// 	{
-// 		free((*tree)->info);
-// 		free((*tree));
-// 	}
-// 	(*tree) = NULL;
-// }
-
-
-
+		if ((*tree)->left != NULL)
+			reverseTree(&(*tree)->left);
+		if ((*tree)->right != NULL)
+			reverseTree(&(*tree)->right);
+	}
+}

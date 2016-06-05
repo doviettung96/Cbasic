@@ -42,7 +42,57 @@ void freeTree(tree_type tree) {
 	return;
 }
 
-void search(tree_type tree, char *word) {
+tree_type findMin(tree_type tree) {
+	if (tree == NULL)
+		return NULL;
+	else if (tree->left != NULL)
+		return findMin(tree->left);
+	else
+		return tree;
+}
+
+tree_type findMax(tree_type tree) {
+	if (tree == NULL)
+		return NULL;
+	else if (tree->right != NULL)
+		return findMax(tree->right);
+	else
+		return tree;
+}
+
+element_type deleteMin (tree_type *tree ) {
+	element_type entry;
+	if ((*tree)->left == NULL) {
+		entry = (*tree)->info;
+		(*tree) = (*tree)->right;
+		return entry;
+	}
+	else return deleteMin(&(*tree)->left);
+}
+
+void delete(tree_type *tree, char *word)
+{
+	int flag = 0;
+	if (*tree != NULL)
+	{
+		flag = strcmp(word, (*tree)->info.word);
+
+		if (flag < 0)
+			delete(&(*tree)->left, word);
+		else if (flag > 0)
+			delete(&(*tree)->right, word);
+		else if ((*tree)->left == NULL && (*tree)->right == NULL)
+			*tree = NULL;
+		else if ((*tree)->left == NULL)
+			*tree = (*tree)->right;
+		else if ((*tree)->right == NULL)
+			*tree = (*tree)->left;
+		else
+			(*tree)->info = deleteMin(&(*tree)->right);
+	}
+}
+
+tree_type search(tree_type tree, char *word) {
 	int flag = 0;
 	if (tree == NULL)
 	{
@@ -50,12 +100,15 @@ void search(tree_type tree, char *word) {
 		return;
 	}
 	flag = strcmp(tree->info.word, word);
-	if (flag == 0)
-		printf("Found.\n %s: %s\n", tree->info.word, tree->info.meaning);
+	if (flag == 0) {
+		printf("Found.\n");
+		return tree;
+	}
+
 	else if (flag > 0)
-		search(tree->left, word);
+		tree = search(tree->left, word);
 	else if (flag < 0)
-		search(tree->right, word);
+		tree = search(tree->right, word);
 }
 
 void insert(tree_type *tree, element_type entry) {
@@ -78,6 +131,46 @@ void insert(tree_type *tree, element_type entry) {
 	else if (flag < 0)
 		insert(&(*tree)->right, entry);
 }
+
+// void update(tree_type *tree, char *word)
+// {
+// 	int choice;
+// 	char newword[20];
+// 	char newmeaning[128];
+// 	tree_type temp;
+// 	do {
+// 		printf("1. Update meaning\n2. Update word\n3. Return to main menu\n");
+// 		printf("Your choice: ");
+// 		scanf("%d", &choice);
+// 		switch (choice)
+// 		{
+// 		case 1:
+// 			temp = search(*tree, word);
+// 			printf("Type in the new meaning for %s\n", temp->info.word);
+// 			while (getchar() != '\n');
+// 			scanf("%[^\n]", newmeaning);
+// 			strcpy(temp->info.meaning, newmeaning);
+// 			delete(tree, word);
+// 			insert(tree, temp->info);
+// 			break;
+// 		case 2:
+// 			temp = search(*tree, word);
+// 			printf("Type in the new word for %s\n", temp->info.word);
+// 			while (getchar() != '\n');
+// 			scanf("%[^\n]", newword);
+// 			strcpy(temp->info.word, newword);
+// 			delete(tree, word);
+// 			insert(tree, temp->info);
+// 			break;
+// 		case 3:
+// 			break;
+// 		default:
+// 			printf("Choice must be from 1 to 3\n");
+// 			break;
+// 		}
+// 	} while (choice != 3);
+// }
+
 
 void preOrder(tree_type tree, void (*order)(tree_type))
 {

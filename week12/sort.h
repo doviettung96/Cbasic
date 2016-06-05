@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define N 1000
+
 typedef int element_type;
 
 void swap(element_type *a, element_type *b)
@@ -45,9 +47,9 @@ void selectionSort(element_type a[], int size)
 void bubbleSort(element_type a[], int size)
 {
 	int i, j, temp;
-	for(i = size - 1; i >= 0; --i)
-		for(j = 1; j <= i; ++j)
-			if(a[j - 1] > a[j])
+	for (i = size - 1; i >= 0; --i)
+		for (j = 1; j <= i; ++j)
+			if (a[j - 1] > a[j])
 				swap(&a[j - 1], &a[j]);
 }
 
@@ -104,6 +106,88 @@ void quickSort(element_type a[], int low, int high)
 		p = partition(a, low, high);
 		quickSort(a, low, p - 1);
 		quickSort(a, p + 1, high);
+	}
+}
+
+// void merge(element_type a[], int n, int first, int mid, int last)
+// {
+// 	element_type temp[n];
+// 	int first1 = first;
+// 	int last1 = mid;
+// 	int first2 = mid + 1;
+// 	int last2 = last;
+// 	int index = first1;
+// 	for (; first1 <= last1 && first2 <= last2; ++index)
+// 	{
+// 		if (a[first1] < a[first2])
+// 		{
+// 			temp[index] = a[first1];
+// 			++first1;
+// 		}
+// 		else
+// 		{
+// 			temp[index] = a[first2];
+// 			++index;
+// 		}
+// 		for (; first1 <= last1; ++first1, ++index)
+// 			temp[index] = a[first1];
+// 		for (; first2 <= last2; ++first2, ++index)
+// 			temp[index] = a[first2];
+// 		for (index = first; index <= last; ++index)
+// 			a[index] = temp[index];
+// 	}
+// }
+
+// void mergeSort(element_type a[], int n, int first, int last)
+// {
+// 	int mid;
+// 	if (first < last)
+// 	{
+// 		mid = (first + last) / 2;
+// 		mergeSort(a, n, first, mid);
+// 		mergeSort(a, n, mid + 1, last);
+// 		merge(a, n, first, mid, last);
+// 	}
+// }
+
+void merge(element_type u[], int m, element_type v[], int n, int a[])
+{
+	int i = 0, j = 0;
+	int k = 0;
+	while (k < m + n)
+	{
+		if (u[i] < v[j])
+		{
+			a[k] = u[i];
+			++i;
+		}
+		else 
+		{
+			a[k] = v[j];
+			++j;
+		}
+		++k;
+	}
+}
+
+void mergeSort(element_type a[], int n)
+{
+	int i = 0, j = 0;
+	int mid = n/ 2;
+	element_type u[mid];
+	element_type v[n - mid];
+	if (n < N)
+		selectionSort(a, n);
+	else
+	{
+		for (i = 0; i < mid; ++i)
+			u[i] = a[i];
+		for (j = 0; j < n - mid; ++j, ++i)
+			v[j] = a[i];
+
+		mergeSort(u, mid);
+		mergeSort(v, n - mid);
+		merge(u, mid, v, n - mid, a);
 	}
 }
 

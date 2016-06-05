@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef int element_type;
+
 typedef struct TNode {
-	int info;
+	element_type info;
 	struct TNode *left;
 	struct TNode *right;
 } TNode;
@@ -14,7 +16,7 @@ void makeNullTree(tree_type *tree) {
 	(*tree) = NULL;
 }
 
-TNode *makeTNode(int val) {
+TNode *makeTNode(element_type val) {
 	TNode *p;
 	p = (TNode *)malloc(sizeof(TNode));
 	p->left = NULL;
@@ -36,7 +38,25 @@ void freeTree(tree_type tree) {
 	return;
 }
 
-tree_type search(tree_type tree, int key) {
+tree_type findMin(tree_type tree) {
+	if (tree == NULL)
+		return NULL;
+	else if (tree->left != NULL)
+		return findMin(tree->left);
+	else
+		return tree;
+}
+
+tree_type findMax(tree_type tree) {
+	if (tree == NULL)
+		return NULL;
+	else if (tree->right != NULL)
+		return findMax(tree->right);
+	else
+		return tree;
+}
+
+tree_type search(tree_type tree, element_type key) {
 	if (tree == NULL)
 		return NULL;
 	else if (tree->info == key)
@@ -47,13 +67,42 @@ tree_type search(tree_type tree, int key) {
 		tree = search(tree->right, key);
 }
 
-void insert(tree_type *tree, int key) {
+void insert(tree_type *tree, element_type key) {
 	if (*tree == NULL)
 		*tree = makeTNode(key);
 	else if ((*tree)->info > key)
 		insert(&(*tree)->left, key);
 	else if ((*tree)->info < key)
 		insert(&(*tree)->right, key);
+}
+
+element_type deleteMin (tree_type *tree ) {
+	element_type key;
+	if ((*tree)->left == NULL) {
+		key = (*tree)->info;
+		(*tree) = (*tree)->right;
+		return key;
+	}
+	else return deleteMin(&(*tree)->left);
+}
+
+void delete(tree_type *tree, element_type key)
+{
+	if (*tree != NULL)
+	{
+		if (key < (*tree)->info)
+			delete(&(*tree)->left, key);
+		else if (key > (*tree)->info)
+			delete(&(*tree)->right, key);
+		else if ((*tree)->left == NULL && (*tree)->right == NULL)
+			*tree = NULL;
+		else if ((*tree)->left == NULL)
+			*tree = (*tree)->right;
+		else if ((*tree)->right == NULL)
+			*tree = (*tree)->left;
+		else
+			(*tree)->info = deleteMin(&(*tree)->right);
+	}
 }
 
 void preOrder(tree_type tree, void (*order)(tree_type))
@@ -86,24 +135,6 @@ void postOrder(tree_type tree, void (*order)(tree_type))
 	}
 }
 
-tree_type findMin(tree_type tree) {
-	if (tree == NULL)
-		return NULL;
-	else if (tree->left != NULL)
-		return findMin(tree->left);
-	else
-		return tree;
-}
-
-tree_type findMax(tree_type tree) {
-	if (tree == NULL)
-		return NULL;
-	else if (tree->right != NULL)
-		return findMax(tree->right);
-	else
-		return tree;
-}
-
 void reverseTree(tree_type *tree) {
 	tree_type temp;
 
@@ -112,7 +143,7 @@ void reverseTree(tree_type *tree) {
 			reverseTree(&(*tree)->left);
 		if ((*tree)->right != NULL)
 			reverseTree(&(*tree)->right);
-		
+
 		temp = (*tree)->left;
 		(*tree)->left = (*tree)->right;
 		(*tree)->right = temp;

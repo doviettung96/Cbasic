@@ -6,6 +6,7 @@ void display(tree_type tree);
 void main() {
 	int input[MAX];
 	int i;
+	int check;
 	tree_type tree;
 	makeNullTree(&tree);
 	tree_type temp;
@@ -16,8 +17,12 @@ void main() {
 		scanf("%d", &input[i]);
 		insert(&tree, input[i]);
 	}
-
+	printf("Type in a value to delete: ");
+	scanf("%d", &check);
+	delete(&tree, check);
+	
 	reverseTree(&tree);
+
 	printf("\nThe tree in preoder: \n");
 	preOrder(tree, display);
 	printf("\nThe tree in inoder: \n");
@@ -29,7 +34,6 @@ void main() {
 	printf("The min element: %d\n", temp->info);
 	temp = findMax(tree);
 	printf("The max element: %d\n", temp->info);
-
 	freeTree(tree);
 }
 

@@ -137,11 +137,15 @@ int main(int argc, char **argv) {
 				exit(1);
 			}
 			savetoFile(fout, list);
+			fclose(fout);
 			break;
 		case MAX:
 			freeList(list);
 			freeList(list2);
 			freeList(list3);
+			free(list);
+			free(list2);
+			free(list3);
 			exit(1);
 		default: printf("Invalid choice. It must be from 1 to %d\n", MAX); break;
 		}

@@ -2,13 +2,14 @@
 #include "time.h"
 #include "menu.h"
 
-#define MAX 1000000
+#define MAX 10000000
 #define MAXSC 5
 
 void display(tree_type tree);
 
 void main()
 {
+	int isFree = 0;
 	int choice;
 	char sections[MAXSC][40] = {"Create a binary tree database", "Free tree", "Traverse tree", "Find a number", "Exit"};
 	int i = 0;
@@ -25,16 +26,20 @@ void main()
 		case 1:
 			for (i = 0; i < MAX; ++i)
 			{
-				rd = rand() % MAX;
+				rd = rand();
 				insert(&tree, rd);
 			}
+			isFree = 0;
 			break;
 		case 2:
 			freeTree(tree);
+			isFree = 1;
 			break;
 		case 3:
-			inOrder(tree, display);
-			printf("Height = %d\n", height(tree));
+			if (isFree == 0) {
+				inOrder(tree, display);
+				printf("Height = %d\n", height(tree));
+			}
 			break;
 		case 4:
 			printf("Type in a number to search: ");
@@ -47,7 +52,7 @@ void main()
 			break;
 
 		case MAXSC:
-			if (!emptyTree(tree))
+			if (isFree == 0)
 				freeTree(tree);
 			break;
 		default:

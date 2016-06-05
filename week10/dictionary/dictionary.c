@@ -1,7 +1,7 @@
 #include "bst.h"
 #include "menu.h"
 
-#define MAX 5
+#define MAX 8
 
 void display(tree_type tree);
 void savetoFile(tree_type tree, FILE *f);
@@ -14,10 +14,14 @@ void main() {
 	tree_type tree;
 	makeNullTree(&tree);
 	element_type input;
-	char sections[MAX][40] = {"Insert a word and meaning", "Traverse through the tree", "Search a word", "Save to file and exit"};
+	char sections[MAX][40] = {"Insert a word and meaning", "Traverse through the tree",
+	                          "Search a word", "Delete a word", "Find minimum", "Find maximum",
+	                          "Update a node", "Save to file and exit"
+	                         };
 	char word[20];
 	char meaning[128];
 	int choice;
+	tree_type temp;
 
 	if ((f = fopen("output.txt", "w+")) == NULL)
 	{
@@ -53,7 +57,29 @@ void main() {
 			printf("\nType in the word you want to find: ");
 			scanf("%[^\n]", word);
 			printf("\nResult: \n");
-			search(tree, word);
+			temp = search(tree, word);
+			printf("%s : %s\n", temp->info.word, temp->info.meaning);
+			break;
+		case 4:
+			while (getchar() != '\n');
+			printf("Type in a word to delete: ");
+			scanf("%[^\n]", word);
+			delete(&tree, word);
+			break;
+		case 5:
+			temp = findMin(tree);
+			printf("The min element: %s\n", temp->info.word);
+			freeTree(tree);
+			break;
+		case 6:
+			temp = findMax(tree);
+			printf("The max element: %s\n", temp->info.word);
+			break;
+		case 7:
+			// while (getchar() != '\n');
+			// printf("\nType in the word you want to update: ");
+			// scanf("%[^\n]", word);
+			// update(tree, word);
 			break;
 		case MAX:
 			saveTraverse(tree, savetoFile);

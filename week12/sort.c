@@ -2,8 +2,8 @@
 #include <time.h>
 #include "menu.h"
 
-#define MAX 2000000
-#define MAXSC 6
+#define MAX 20000
+#define MAXSC 7
 
 void main() {
 	time_t t1, t2;
@@ -11,7 +11,7 @@ void main() {
 	int i = 0;
 	int choice;
 	int a[MAX];
-	char sections[MAXSC][40] = {"Generating number", "Insertion Sort", "Selection Sort", "Bubble Sort", "Heap Sort", "Exit"};
+	char sections[MAXSC][40] = {"Generating number", "Insertion Sort", "Selection Sort", "Bubble Sort", "Heap Sort", "Merge Sort", "Exit"};
 	do {
 		choice = getMenu(sections, MAXSC);
 		switch (choice) {
@@ -24,24 +24,35 @@ void main() {
 			time(&t1);
 			insertionSort(a, MAX);
 			time(&t2);
+			display(a, MAX);
 			printf("Duration: %ld\n", t2 - t1);
 			break;
 		case 3:
 			time(&t1);
 			selectionSort(a, MAX);
 			time(&t2);
+			display(a, MAX);
 			printf("Duration: %ld\n", t2 - t1);
 			break;
 		case 4:
 			time(&t1);
 			bubbleSort(a, MAX);
 			time(&t2);
+			display(a, MAX);
 			printf("Duration: %ld\n", t2 - t1);
 			break;
 		case 5:
 			time(&t1);
 			heapSort(a, MAX);
 			time(&t2);
+			display(a, MAX);
+			printf("Duration: %ld\n", t2 - t1);
+			break;
+		case 6:
+			time(&t1);
+			mergeSort(a, MAX);
+			time(&t2);
+			display(a, MAX);
 			printf("Duration: %ld\n", t2 - t1);
 			break;
 		case MAXSC: break;
