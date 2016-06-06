@@ -35,7 +35,7 @@ void main() {
 			break;
 		case 3:
 			printf("Type in a string: ");
-			s = (char *)malloc(sizeof(char) * 30);
+			s = (char *)malloc(sizeof(char) * 100);
 			while (getchar() == '\n');
 			scanf("%[^\n]", s);
 

@@ -1,4 +1,12 @@
+at	tai
+but	nhung
 car	xe
+cua_toi	cua_toi
 i	toi
+night	buoi_toi
+of	cua
+our	cua_chung_toi
+will	se
+win	chien_thang
 you	ban
-your	cua_ban
+your	cua_toi

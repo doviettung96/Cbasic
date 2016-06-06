@@ -2,8 +2,9 @@
 
 int getMenu(char sections[][40], int maxsection) {
 	int choice;
+	int i = 0;
 	printf("\n");
-	for (int i = 0; i < maxsection; ++i)
+	for (i = 0; i < maxsection; ++i)
 		printf("%2d. %s\n", i + 1, sections[i]);
 	printf("Your choice: ");
 	scanf("%d", &choice);
